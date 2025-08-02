@@ -5,25 +5,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialText = document.querySelector('#info-panel h2');
 
     const infoData = {
-        "CognitionArchive": {
-            title: "The Cognition Archive",
-            text: "This is the system's library and its connection to the vast body of human knowledge. It is a curated vector database containing seminal research papers, articles, and documentation on software design patterns, algorithms, and architectural best practices. It provides the external, grounding knowledge required for genuine, non-hallucinatory innovation."
+        "DB": {
+            title: "The MongoDB Research Database",
+            text: "This is the heart of the system. It is a central database that serves as the collective memory and single source of truth for all agents. Agents do not communicate directly; they read from and write to the database, allowing for robust, asynchronous, and scalable operation. Each document in the database represents a single, complete experiment, tracking its entire lifecycle from hypothesis to final analysis."
+        },
+        "Director": {
+            title: "The Director Agent",
+            text: "The Director is the system's project manager. It periodically scans the database for completed experiments, identifies the most successful ones (based on their final fitness score), and initiates new research cycles. It creates new, blank 'PENDING' experiment documents in the database, assigning the Researcher to generate a new hypothesis based on the successful parent experiment."
         },
         "Researcher": {
             title: "The Researcher Agent",
-            text: "The Researcher is the system's chief scientist. It consults the Cognition Archive and the system's own past experimental results to formulate high-level, creative Research Directions. It does not just propose small tweaks; it proposes new strategic approaches inspired by established computer science principles. Its goal is to generate a plausible hypothesis for a superior 'Challenger' prompt set."
+            text: "The Researcher is the system's chief scientist. It picks up 'PENDING' experiments from the database, consults the external Cognition Archive for knowledge, and analyzes the parent experiment's results. It then formulates a new, specific hypothesis for improvement and designs a 'Challenger' prompt set to test it. It writes this new data to the experiment document and updates its status to 'RUNNING'."
         },
         "Engineer": {
             title: "The Engineer Agent",
-            text: "The Engineer is the robust workhorse of the system. It takes a prompt set (either the Champion or a Challenger) and executes the full development cycle: it writes code, writes corresponding unit tests, and runs them. It includes a critical self-revision mechanism that allows it to debug its own code when a test fails, ensuring that good ideas are not discarded due to simple implementation errors."
+            text: "The Engineer is the workhorse of the system. It picks up 'RUNNING' experiments and executes the full development cycle using the provided Challenger prompt set. This includes writing the code, writing the tests, and, crucially, entering a self-revision loop to debug its own code if the tests fail. Once the code is functionally correct, it writes the final artifacts and performance data to the experiment document."
         },
         "Critic": {
             title: "The Critic Agent (LLM-as-Judge)",
-            text: "The Critic is the key to escaping local optima and rewarding true quality. After a solution has been proven functionally correct by the Engineer, the Critic performs a qualitative assessment. It is prompted with architectural principles from the Cognition Archive and scores the solution on non-functional, qualitative metrics like elegance, maintainability, simplicity, and novelty. A correct but clumsy solution will be scored poorly, preventing the system from settling for mediocrity."
+            text: "The Critic is the arbiter of quality. It finds experiments that have been successfully engineered but not yet assessed. It performs a qualitative analysis of the code, scoring it on non-functional metrics like novelty, elegance, and maintainability. This qualitative score is essential for preventing the system from settling for solutions that are merely correct but not innovative."
         },
-        "PromptDB": {
-            title: "The Prompt Database",
-            text: "This database stores the full, structured prompts for all agents. It always contains the current 'Champion' prompt set (the best-performing one) and, during an experiment, one or more 'Challenger' sets. The final promotion to Champion is decided by a fitness function that weighs both the Engineer's objective performance data and the Critic's qualitative score."
+        "Analyst": {
+            title: "The Analyst Agent",
+            text: "The Analyst is the final step in the loop. It finds experiments that have been fully engineered and criticized. It calculates the final, composite fitness score using a weighted formula that combines the objective performance data from the Engineer and the subjective quality scores from the Critic. It writes this final score to the database and marks the experiment as 'COMPLETED'."
         }
     };
 

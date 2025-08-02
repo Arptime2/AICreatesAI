@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V14 Architecture: Autonomous Research & Development</title>
+    <title>AICAI V15 Architecture: Autonomous Research & Development System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,51 +11,50 @@
         <div id="diagram-container">
             <div class="mermaid">
             graph TD
-                subgraph "KNOWLEDGE & RESEARCH"
+                subgraph "CENTRAL NERVOUS SYSTEM"
                     direction TB
-                    style CognitionArchive fill:#F3E5F5,stroke:#9C27B0
-                    style Researcher fill:#E1BEE7,stroke:#9C27B0
-                    CognitionArchive[["<b>Cognition Archive</b><br>Curated database of<br>papers & best practices"]]
-                    Researcher("<b>Researcher Agent</b><br>Synthesizes knowledge to<br>propose new research directions")
-                    CognitionArchive --> Researcher
+                    style DB fill:#FFF3E0,stroke:#FF9800,stroke-width:4px
+                    DB[["<b>MongoDB Research Database</b><br>The single source of truth and<br>collective memory for all agents"]]
                 end
 
-                subgraph "ENGINEERING & VERIFICATION"
-                    direction TB
+                subgraph "ASYNCHRONOUS AGENT WORKERS"
+                    direction LR
+                    style Director fill:#E3F2FD,stroke:#2196F3
+                    style Researcher fill:#E3F2FD,stroke:#2196F3
                     style Engineer fill:#E0F2F1,stroke:#009688
-                    Engineer("<b>Engineer Agent</b><br>Builds, tests, and self-revises code")
-                end
-
-                subgraph "QUALITATIVE ASSESSMENT"
-                    direction TB
                     style Critic fill:#FFF9C4,stroke:#FFEB3B
-                    Critic("<b>Critic Agent (LLM-as-Judge)</b><br>Scores code for elegance, novelty,<br>and architectural quality")
-                end
+                    style Analyst fill:#FCE4EC,stroke:#E91E63
 
-                subgraph "SYSTEM MEMORY"
-                    direction TB
-                    style PromptDB fill:#FFE0B2,stroke:#FF9800
-                    PromptDB[["<b>Prompt Database</b><br>Stores Champion & Challenger prompts"]]
+                    Director("<b>Director Agent</b><br>Initiates new research cycles")
+                    Researcher("<b>Researcher Agent</b><br>Generates hypotheses &<br>Challenger prompts")
+                    Engineer("<b>Engineer Agent</b><br>Builds, tests, and<br>self-revises code")
+                    Critic("<b>Critic Agent</b><br>Provides qualitative<br>assessment of novelty & elegance")
+                    Analyst("<b>Analyst Agent</b><br>Calculates the final<br>composite fitness score")
                 end
 
                 %% Data Flow
-                Researcher -- "Writes Challenger Prompt" --> PromptDB
-                PromptDB -- "Provides Prompt Set" --> Engineer
-                Engineer -- "Functionally Correct Code" --> Critic
-                Critic -- "Qualitative Score" --> Researcher
-                Engineer -- "Performance Data" --> Researcher
+                Director -- "1. Creates PENDING experiment" --> DB
+                DB -- "2. Provides PENDING experiment" --> Researcher
+                Researcher -- "3. Writes hypothesis & Challenger prompt" --> DB
+                DB -- "4. Provides RUNNING experiment" --> Engineer
+                Engineer -- "5. Writes code & test results" --> DB
+                DB -- "6. Provides experiment for assessment" --> Critic
+                Critic -- "7. Writes qualitative scores" --> DB
+                DB -- "8. Provides complete data for analysis" --> Analyst
+                Analyst -- "9. Writes final fitness score & COMPLETES experiment" --> DB
 
                 %% Final Output
                 VerifiedCode[["<b>High-Quality Code Artifact</b>"]]
                 style VerifiedCode fill:#DCE775,stroke:#8BC34A,stroke-width:3px
-                Critic --> VerifiedCode
+                DB --> VerifiedCode
 
                 %% Interactivity Callbacks
-                click CognitionArchive callback "CognitionArchive"
+                click DB callback "DB"
+                click Director callback "Director"
                 click Researcher callback "Researcher"
                 click Engineer callback "Engineer"
                 click Critic callback "Critic"
-                click PromptDB callback "PromptDB"
+                click Analyst callback "Analyst"
             </div>
         </div>
         <div id="info-panel">

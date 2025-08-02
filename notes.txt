@@ -1,53 +1,89 @@
-# AICAI - Architecture & Functionality Notes (V14 - Definitive)
+# AICAI - Architecture & Functionality Notes (V15 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive V14 architecture. This version faithfully implements the core principles of ASI-Arch, creating a plausible, detailed, and scientifically-grounded system for autonomous, infinite improvement. It introduces a `Cognition Archive` for external knowledge and a `Critic` agent for qualitative assessment.
+**Purpose:** To define the final, definitive V15 architecture. This version faithfully implements the core, detailed principles of ASI-Arch, creating a plausible and scientifically-grounded system for autonomous, infinite improvement. It is built around a centralized, database-centric communication protocol and a composite fitness function.
 
 ---
 
-## 1. Core Philosophy: Autonomous Research & Development
+## 1. Core Philosophy: Autonomous, Collaborative Research via a Centralized Memory
 
-This architecture transcends simple problem-solving. It is a complete, autonomous R&D system. It doesn't just improve code; it performs research, synthesizes knowledge, and makes qualitative judgments to foster genuine innovation. This is achieved by faithfully implementing the multi-agent structure and knowledge-driven methodology of ASI-Arch.
-
----
-
-## 2. Architectural Deep Dive - V14
-
-### 2.1. The `Cognition Archive`
-
-This is the system's library, its connection to the vast body of human knowledge. It is a curated database (e.g., a vector database) containing research papers, articles, and documentation on software engineering, algorithms, and design patterns. This is the fuel for the `Researcher` agent and the foundation for the `Critic` agent's judgments.
-
-### 2.2. The Multi-Agent System for Scientific Discovery
-
-1.  **The `Researcher` Agent:**
-    -   **Role:** The system's chief scientist and innovator.
-    -   **Input:** The user's high-level goal, the system's past experimental results, and, most importantly, relevant documents retrieved from the `Cognition Archive`.
-    -   **Task:** To synthesize this information and generate a high-level **Research Direction**. This is not just a small tweak; it is a proposal for a new, potentially superior, strategic approach.
-    -   **Example Research Direction:** "The `Cognition Archive` contains several papers on the benefits of functional programming for testability. The system's past results show a high rate of untestable code. *Hypothesis:* A new prompt architecture that explicitly instructs the Engineer to use functional decomposition and pure functions will lead to a significant improvement in testability and a reduction in bugs."
-    -   **Output:** A structured research proposal, including the hypothesis and a draft of a "Challenger" prompt set.
-
-2.  **The `Engineer` Agent:**
-    -   **Role:** The system's workhorse, responsible for turning research into reality.
-    -   **Input:** A task and a prompt set (either the current "Champion" or a "Challenger").
-    -   **Core Function:** It runs the standard `Code -> Test -> Execute` cycle.
-    -   **Self-Revision Mechanism:** If a test fails, the Engineer is re-invoked with the code and the error, and is explicitly tasked with debugging and patching its own code.
-
-3.  **The `Critic` Agent (LLM-as-Judge):**
-    -   **Role:** The system's arbiter of quality and elegance.
-    -   **Input:** A functionally correct code artifact that has passed all tests.
-    -   **Task:** To perform a qualitative assessment. It is prompted with the principles of good software design from the `Cognition Archive` (e.g., "SOLID principles," "Don't Repeat Yourself") and is asked to score the code on criteria like **elegance, simplicity, maintainability, and novelty**.
-    -   **Output:** A qualitative score and a structured report detailing its reasoning.
-
-### 2.3. The Complete Research & Development Loop
-
-1.  **Research:** The `Researcher` agent consults the `Cognition Archive` and past results to propose a new `Challenger` prompt set.
-2.  **Experimentation:** The `Engineer` agent runs the task with both the `Champion` and `Challenger` prompts.
-3.  **Verification:** The `Engineer`'s self-revision mechanism ensures both outputs are functionally correct.
-4.  **Qualitative Assessment:** The `Critic` agent evaluates both correct solutions for their architectural quality.
-5.  **Promotion:** A new Champion is chosen based on a fitness function that weighs both **objective performance** (efficiency, test coverage) and **qualitative score** (elegance, novelty). This is the key to avoiding local optima and rewarding true innovation.
+This architecture abandons all previous simplistic models. It implements a rigorous, multi-agent system where all communication and collaboration are mediated through a central, persistent database. This asynchronous, database-centric model is a direct implementation of the core design of successful research systems like ASI-Arch. The system's evolution is guided by a sophisticated, composite fitness function that balances objective performance with a qualitative assessment of innovation and elegance.
 
 ---
 
-## 4. Visualization V11: The Definitive R&D Loop
+## 2. Architectural Deep Dive - V15
 
-I will now create the final, most detailed interactive visualization. It will clearly illustrate the `Cognition Archive`, the new `Researcher` and `Critic` agents, and the complete, plausible research loop that fosters genuine creativity.
+### 2.1. The Central Nervous System: The MongoDB Research Database
+
+This is the heart of the system. It is a MongoDB database that serves as the single source of truth and the collective memory for all agents. It stores a collection of "Experiment" documents, each with a detailed schema:
+
+```json
+{
+  "_id": "...",
+  "experiment_id": "...",
+  "parent_experiment_id": "...", // For tracing lineage
+  "status": "(PENDING, RUNNING, COMPLETED, FAILED)",
+  "hypothesis": "...", // The specific hypothesis being tested
+  "champion_prompt_set": { ... },
+  "challenger_prompt_set": { ... },
+  "engineer_output": {
+    "code": "...",
+    "tests": "...",
+    "self_revision_trace": [ ... ]
+  },
+  "verification_results": {
+    "test_pass_rate": 0.95,
+    "linting_score": 8.5,
+    "efficiency_metrics": { ... }
+  },
+  "critic_assessment": {
+    "novelty_score": 7,
+    "elegance_score": 8,
+    "qualitative_report": "..."
+  },
+  "final_fitness_score": 8.85
+}
+```
+
+### 2.2. The Multi-Agent System
+
+The agents operate as independent, asynchronous workers that communicate only by reading from and writing to the Research Database.
+
+1.  **The `Director` Agent:**
+    -   **Role:** The system's project manager.
+    -   **Trigger:** Periodically scans the database for experiments with `status: COMPLETED`.
+    -   **Task:** To initiate the next cycle of research. It selects the highest-performing experiments and creates new `PENDING` experiment documents, tasking the `Researcher` agent with generating a new hypothesis based on the successful parent.
+
+2.  **The `Researcher` Agent:**
+    -   **Role:** The system's chief scientist.
+    -   **Trigger:** Scans the database for experiments with `status: PENDING` that are assigned to it.
+    -   **Task:** Reads the parent experiment's data. Consults the `Cognition Archive` (a separate knowledge base of research papers). Generates a new, specific hypothesis and a "Challenger" prompt set. It then updates the experiment document in the database with this new information and sets the `status` to `RUNNING`.
+
+3.  **The `Engineer` Agent:**
+    -   **Role:** The system's workhorse.
+    -   **Trigger:** Scans the database for experiments with `status: RUNNING`.
+    -   **Task:** Executes the `Code -> Test -> Self-Revise` cycle using the Challenger prompt set. Upon successful completion, it writes the final code, tests, and self-revision trace to the experiment document.
+
+4.  **The `Critic` Agent (LLM-as-Judge):**
+    -   **Role:** The system's arbiter of quality.
+    -   **Trigger:** Scans the database for experiments where the `engineer_output` is present but the `critic_assessment` is not.
+    -   **Task:** Performs a qualitative assessment of the generated code, scoring it for novelty and elegance. It writes its report and scores to the experiment document.
+
+5.  **The `Analyst` Agent:**
+    -   **Role:** The system's data analyst.
+    -   **Trigger:** Scans the database for experiments where the `critic_assessment` is present but the `final_fitness_score` is not.
+    -   **Task:** Calculates the final, composite fitness score based on a weighted formula of the objective verification results and the subjective critic assessment. It writes this final score to the experiment document and sets the `status` to `COMPLETED`.
+
+### 2.3. The Composite Fitness Function
+
+The `Analyst` agent uses a formula like this to calculate the final score:
+
+`Fitness = (w1 * Test_Pass_Rate) + (w2 * Linting_Score) + (w3 * Novelty_Score) + (w4 * Elegance_Score) - (w5 * Efficiency_Penalty)`
+
+This ensures that the system evolves towards solutions that are not just correct, but also innovative, elegant, and efficient.
+
+---
+
+## 4. Visualization V12: The Definitive Autonomous Research System
+
+I will now create the final, most detailed interactive visualization. It will clearly illustrate the central role of the Research Database, the asynchronous nature of the agents, and the complete, plausible research loop.
