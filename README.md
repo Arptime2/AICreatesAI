@@ -62,79 +62,107 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: The Infinite Loop of Refinement
+## Architecture: A Cognitive Framework for Code Generation
 
-Previous explanations were too linear. The true power of this tool, inspired by ASI-Arch, is not a simple pipeline but a **cyclical, self-correcting, and potentially infinite loop**. The goal is to create a system that doesn't just generate code, but iteratively improves it until it reaches a state of high quality and correctness. The process is designed to be interruptible by the user, but conceptually, it could run forever, constantly refining the code.
+To overcome the inherent limitations of small models, we don't just use a simple loop; we emulate a cognitive architecture. This approach, heavily inspired by systems like ASI-Arch and cognitive science, provides a structured environment for an 8B model to reason, plan, and self-correct, achieving a level of coherence and quality far beyond its individual capacity.
 
-This is achieved by a more sophisticated multi-persona approach, where each persona has a detailed set of responsibilities.
+The two pillars of this architecture are the **Working Memory** and the **Governed Orchestration Loop**.
 
 ```mermaid
 graph TD
-    A[Start: User Prompt & Code] --> B{1. The Architect};
-    B -- Creates/Refines --> C(High-Level Plan);
-    C --> D{2. The Coder};
-    D -- Implements --> E(Code Snippet);
-    E --> F{3. The Reviewer};
-    F -- Generates --> G(Critique & Suggestions);
-    G -- Feeds back to --> B;
-
-    subgraph "Core Improvement Loop"
+    subgraph "System Core"
         direction LR
-        B -- LLM Call --> B;
-        D -- LLM Call --> D;
-        F -- LLM Call --> F;
+        A[User Prompt] --> B(Orchestrator);
+        B <--> C{Working Memory};
     end
 
-    H(Final Code) -- User Interrupt --> A;
-    G -- No more suggestions --> H;
+    subgraph "Working Memory (The System's 'Mind')"
+        direction TB
+        C1[Full Code State];
+        C2[High-Level Plan];
+        C3[Execution Trace];
+        C4[Reviewer's Critique];
+        C5[User's Goal];
+    end
 
-    linkStyle 0 stroke-width:2px,fill:none,stroke:black;
-    linkStyle 1 stroke-width:2px,fill:none,stroke:black;
-    linkStyle 2 stroke-width:2px,fill:none,stroke:black;
-    linkStyle 3 stroke-width:2px,fill:none,stroke:black;
-    linkStyle 4 stroke-width:2px,fill:none,stroke:black,stroke-dasharray: 5 5;
-    linkStyle 6 stroke-width:2px,fill:none,stroke:green;
+    subgraph "Governed Orchestration Loop (The 'Cognitive Cycle')"
+        direction TB
+        B --> D{1. Architect Persona};
+        D -- Plan --> B;
+        B --> E{2. Coder Persona};
+        E -- Code --> B;
+        B --> F{3. Reviewer Persona};
+        F -- Critique --> B;
+        B --> G{4. Self-Correction};
+        G -- Updated Plan/Code --> B;
+    end
 
-    style B fill:#f2b04d,stroke:#333,stroke-width:2px
-    style D fill:#4da6f2,stroke:#333,stroke-width:2px
-    style F fill:#4df2a6,stroke:#333,stroke-width:2px
+    subgraph "LLM as a Service (Specialized Skill)"
+        H((Groq API - 8B Model))
+    end
+
+    D <--> H;
+    E <--> H;
+    F <--> H;
+
+    style C fill:#e6f2ff,stroke:#333,stroke-width:2px
+    style B fill:#ccffcc,stroke:#333,stroke-width:2px
+    style H fill:#ffcccc,stroke:#333,stroke-width:2px
 ```
 
-### The Roles in Detail:
+### The Working Memory: The Key to Coherence
 
-#### 1. The Architect: The Master Planner
--   **Core Task**: Maintain the high-level vision of the project.
--   **Sub-Tasks**:
-    -   **Initial Planning**: On the first loop, create a comprehensive, step-by-step plan based on the user's prompt.
-    -   **Plan Refinement**: On subsequent loops, *re-evaluate the entire plan* based on the Reviewer's feedback. Does the plan need to be changed? Are there new steps to add? Should the order be modified?
-    -   **Decomposition**: Break down complex steps into smaller, more manageable sub-tasks for the Coder.
--   **Prompt Focus**: "You are a 10x software architect. Your goal is to create and refine a robust, scalable, and maintainable plan. Critically analyze the current plan and the reviewer's feedback. Output a revised, numbered list of steps."
+The single biggest challenge for small models is their lack of memory. Our **Working Memory** solves this. It is a structured, in-memory state object that persists across the entire lifecycle of a task. It contains:
 
-#### 2. The Coder: The Focused Implementer
--   **Core Task**: Write code for a single, specific task.
--   **Sub-Tasks**:
-    -   **Contextual Understanding**: Receive the full plan for context, but focus only on the *current* step provided by the Architect.
-    -   **Code Generation**: Write the most efficient, readable, and correct code to implement that single step.
-    -   **Integration**: Ensure the new code snippet correctly integrates with the existing code provided in the prompt.
--   **Prompt Focus**: "You are a senior developer. Your task is to implement the following step from the plan. Here is the existing code. Write only the new code required for this step."
+-   **Full Code State**: The complete, up-to-date version of the code being generated or modified.
+-   **High-Level Plan**: A structured list of tasks and sub-tasks, continuously updated by the Architect.
+-   **Execution Trace**: A log of which plan steps have been completed, which have failed, and which are pending. This prevents the system from getting stuck in loops.
+-   **Reviewer's Critique**: A list of actionable bugs, suggestions, and required changes from the last review cycle.
+-   **User's Goal**: The original, unmodified prompt from the user, serving as the ultimate source of truth.
 
-#### 3. The Reviewer: The Quality Gate
--   **Core Task**: Critically evaluate the code and provide actionable feedback.
--   **Sub-Tasks**:
-    -   **Bug Detection**: Analyze the generated code for potential runtime errors, logical flaws, and edge cases.
-    -   **Best Practices**: Check for adherence to language-specific best practices, style guides (e.g., PEP 8), and design patterns.
-    -   **Suggestion Generation**: Produce a structured list of concrete, actionable suggestions. This is not just a critique; it's a set of instructions for the Architect. For example: `["ERROR: The database connection is not closed.", "SUGGESTION: Refactor the `process_data` function to be more modular."]`
--   **Prompt Focus**: "You are a meticulous code reviewer and QA engineer. Analyze the following code. Identify all bugs, style issues, and areas for improvement. Provide your feedback as a list of actionable suggestions. If there are no issues, respond with 'None'"
+By maintaining this central state, we ensure that every persona has access to the full context of the task, even if the LLM call itself only uses a small part of it.
 
-### The Infinite Loop in Practice:
+### The Governed Orchestration Loop
 
-1.  The **Architect** creates a plan.
-2.  The **Coder** implements the plan, step by step.
-3.  The **Reviewer** analyzes the result.
-4.  **If the Reviewer provides suggestions**, the loop repeats. The **Architect** receives the suggestions and refines the plan. The **Coder** then re-implements the modified plan.
-5.  **If the Reviewer responds with "None"**, the system has reached a state of equilibrium. The code is considered complete and is presented to the user.
+This is the heart of the system. The **Orchestrator** (`recursive_improver.py`) is not just a simple loop; it's a state machine that intelligently invokes different personas based on the contents of the Working Memory.
 
-This cyclical process of planning, coding, and reviewing allows the system to bootstrap itself from a simple prompt to a complex, high-quality application, all while using a small, efficient 8B model for each discrete step.
+#### 1. The Architect Persona (The Planner)
+-   **Trigger**: Invoked at the start of the process or when the Reviewer's Critique demands a change in strategy.
+-   **Input from Memory**: User's Goal, existing Plan (if any), Reviewer's Critique.
+-   **Core Logic**: 
+    1.  **Analyze Goal**: Understand the user's core intent.
+    2.  **Analyze Critique**: Identify high-level flaws in the current approach.
+    3.  **Generate/Refine Plan**: Create or modify the High-Level Plan in the Working Memory. This includes breaking down tasks into the smallest possible, verifiable steps (e.g., "import library," "create function signature," "add `try...except` block").
+-   **Why it Works**: This isolates strategic thinking from implementation. The plan becomes a structured, machine-readable set of instructions, which is far more reliable than prose.
+
+#### 2. The Coder Persona (The Implementer)
+-   **Trigger**: Invoked when the Plan has pending tasks in the Execution Trace.
+-   **Input from Memory**: A *single* step from the Plan, and the relevant snippet of the Full Code State.
+-   **Core Logic**:
+    1.  **Isolate Context**: The Orchestrator intelligently extracts the minimum necessary code from the Full Code State that is relevant to the current task.
+    2.  **Generate Code**: The Coder persona is prompted to write the code for *only that single step*.
+    3.  **Update State**: The generated code is integrated back into the Full Code State in Working Memory.
+-   **Why it Works**: This is the ultimate solution to the context window problem. The LLM is never burdened with the full application. It operates on a tiny, focused slice of the problem, which allows the 8B model to perform with high precision.
+
+#### 3. The Reviewer Persona (The Quality Controller)
+-   **Trigger**: Invoked after the Coder has completed a set of tasks.
+-   **Input from Memory**: The Full Code State and the High-Level Plan.
+-   **Core Logic**:
+    1.  **Holistic Analysis**: Unlike the Coder, the Reviewer is prompted to look at the *entire* generated code.
+    2.  **Generate Structured Critique**: It identifies bugs, style issues, and deviations from the plan. The output is not just text, but a structured list of issues (e.g., `{"type": "BUG", "file": "app.py", "line": 42, "description": "Database connection is not closed"}`).
+    3.  **Update State**: This structured critique is saved to the Reviewer's Critique section of the Working Memory.
+-   **Why it Works**: By forcing the LLM to produce structured output, we turn a subjective review into a machine-readable set of tasks. This allows the Orchestrator to make deterministic decisions in the next phase.
+
+#### 4. Self-Correction (The Decider)
+-   **Trigger**: The final step in every loop.
+-   **Input from Memory**: The entire Working Memory.
+-   **Core Logic**:
+    1.  **Check for Completion**: If the Reviewer's Critique is empty and all plan steps are complete, the process is finished.
+    2.  **Route for Correction**: If the Critique contains issues, the Orchestrator decides where to send them. A bug in the code might create a new task for the Coder. A fundamental flaw in the logic will send the critique back to the Architect to revise the entire plan.
+    3.  **Loop**: The process repeats, feeding the refined plan and critique back into the system.
+-   **Why it Works**: This closes the loop. It's the mechanism that enables true, recursive self-improvement and prevents the system from simply outputting a flawed first draft.
+
+This cognitive architecture provides the structure, memory, and feedback loops necessary for a small model to perform complex software engineering tasks in a robust, reliable, and high-quality manner.
 
 
 ## Installation
