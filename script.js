@@ -1,37 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const diagramContainer = document.getElementById('diagram-container');
-    const infoContent = document.getElementById('info-content');
-    const initialText = document.querySelector('#info-panel h2');
+    mermaid.initialize({ startOnLoad: true });
 
-    const diagrams = {
-        "overview": `
-        graph TD
-            subgraph "COMPETITIVE CO-EVOLUTIONARY SYSTEM"
-                A[Prompt Population]
-                B[Critic Population]
-                C(Engineer Agent)
-                D[Cognition Archive]
-                A <--> C
-                B <--> C
-                D --> A
-                D --> B
-            end
-        `,
-        "prompt-cycle": `
-        graph TD
-            A[Prompt Population] --> B{Select Fittest Prompts}
-            B --> C{Crossover & Mutation}
-            C --> D[New Generation of Prompts]
-            D --> A
-        `,
-        "critic-cycle": `
-        graph TD
-            A[Critic Population] --> B{Select Fittest Critics}
-            B --> C{Crossover & Mutation}
-            C --> D[New Generation of Critics]
-            D --> A
-        `
-    };
+    const infoPanel = document.getElementById('info-panel');
+    const infoContent = document.createElement('div');
+    infoPanel.appendChild(infoContent);
 
     const infoData = {
         "overview": {
@@ -48,39 +20,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    function renderDiagram(diagramId) {
-        mermaid.mermaidAPI.render('mermaid-diagram', diagrams[diagramId], (svgCode) => {
-            diagramContainer.innerHTML = svgCode;
-        });
-        const data = infoData[diagramId];
+    function showInfo(viewId) {
+        const data = infoData[viewId];
         if (data) {
-            initialText.style.display = 'none';
             infoContent.innerHTML = `<h3>${data.title}</h3><p>${data.text}</p>`;
         }
     }
 
-    document.getElementById('overview-btn').addEventListener('click', () => {
-        renderDiagram('overview');
-        setActiveButton('overview-btn');
-    });
+    function setActiveView(viewId) {
+        document.querySelectorAll('.mermaid-diagram-wrapper').forEach(wrapper => {
+            wrapper.classList.remove('active');
+        });
+        document.getElementById(`${viewId}-diagram`).classList.add('active');
 
-    document.getElementById('prompt-cycle-btn').addEventListener('click', () => {
-        renderDiagram('prompt-cycle');
-        setActiveButton('prompt-cycle-btn');
-    });
-
-    document.getElementById('critic-cycle-btn').addEventListener('click', () => {
-        renderDiagram('critic-cycle');
-        setActiveButton('critic-cycle-btn');
-    });
-
-    function setActiveButton(buttonId) {
         document.querySelectorAll('#controls button').forEach(button => {
             button.classList.remove('active');
         });
-        document.getElementById(buttonId).classList.add('active');
+        document.getElementById(`${viewId}-btn`).classList.add('active');
+
+        showInfo(viewId);
     }
 
-    // Initial render
-    renderDiagram('overview');
+    document.getElementById('overview-btn').addEventListener('click', () => setActiveView('overview'));
+    document.getElementById('prompt-cycle-btn').addEventListener('click', () => setActiveView('prompt-cycle'));
+    document.getElementById('critic-cycle-btn').addEventListener('click', () => setActiveView('critic-cycle'));
+
+    // Initial state
+    setActiveView('overview');
 });

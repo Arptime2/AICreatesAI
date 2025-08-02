@@ -10,7 +10,39 @@
     <div id="container">
         <div id="main-view">
             <div id="diagram-container">
-                <!-- Main SVG diagram will be rendered here -->
+                <div id="overview-diagram" class="mermaid-diagram-wrapper active">
+                    <div class="mermaid">
+                        graph TD
+                            subgraph "COMPETITIVE CO-EVOLUTIONARY SYSTEM"
+                                A[Prompt Population]
+                                B[Critic Population]
+                                C(Engineer Agent)
+                                D[Cognition Archive]
+                                A <--> C
+                                B <--> C
+                                D --> A
+                                D --> B
+                            end
+                    </div>
+                </div>
+                <div id="prompt-cycle-diagram" class="mermaid-diagram-wrapper">
+                    <div class="mermaid">
+                        graph TD
+                            A[Prompt Population] --> B{Select Fittest Prompts}
+                            B --> C{Crossover & Mutation}
+                            C --> D[New Generation of Prompts]
+                            D --> A
+                    </div>
+                </div>
+                <div id="critic-cycle-diagram" class="mermaid-diagram-wrapper">
+                    <div class="mermaid">
+                        graph TD
+                            A[Critic Population] --> B{Select Fittest Critics}
+                            B --> C{Crossover & Mutation}
+                            C --> D[New Generation of Critics]
+                            D --> A
+                    </div>
+                </div>
             </div>
             <div id="controls">
                 <button id="overview-btn" class="active">System Overview</button>
@@ -19,8 +51,7 @@
             </div>
         </div>
         <div id="info-panel">
-            <h2>Click a component to see details.</h2>
-            <div id="info-content"></div>
+            <!-- Info content will be managed by script.js -->
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>

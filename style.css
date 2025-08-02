@@ -1,4 +1,4 @@
-/* V4 - Professional & Interactive Stylesheet */
+/* V5 - Professional & Robust Stylesheet */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 :root {
@@ -48,6 +48,16 @@ body {
     align-items: center;
 }
 
+.mermaid-diagram-wrapper {
+    display: none; /* Hide all diagrams by default */
+    width: 100%;
+    height: 100%;
+}
+
+.mermaid-diagram-wrapper.active {
+    display: block; /* Show only the active diagram */
+}
+
 #controls {
     display: flex;
     gap: 1rem;
@@ -75,20 +85,12 @@ body {
     overflow-y: auto;
 }
 
-#info-panel h2 {
-    margin-top: 0;
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
-}
-
-#info-content h3 {
+#info-panel h3 {
     font-size: 1.25rem;
     color: #343a40;
 }
 
-#info-content p {
+#info-panel p {
     line-height: 1.7;
     font-size: 1rem;
 }
