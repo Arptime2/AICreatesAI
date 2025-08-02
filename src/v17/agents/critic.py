@@ -1,5 +1,5 @@
 from src.v17.genome import CriticGenome
-from src.v17.groq_client import GroqClient
+from src.groq_client import GroqClient
 
 class CriticAgent:
     """Evaluates code based on a CriticGenome."""

@@ -1,0 +1,243 @@
+--- Generation 0 ---
+Prompts:
+{
+    "id": "prompt_0",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_1",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_2",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_3",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_4",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_5",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_6",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_7",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_8",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_9",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_0_prompt_1_child",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_6_prompt_1_child",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_0_prompt_3_child",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_2_prompt_6_child",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+{
+    "id": "prompt_7_prompt_4_child",
+    "template": "",
+    "persona_description": "",
+    "task_framing": "",
+    "output_format_instruction": "",
+    "constraints": [],
+    "fitness_score": 0.1
+}
+Critics:
+{
+    "id": "critic_0",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_1",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_2",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_3",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_4",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_5",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_6",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_7",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_8",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_9",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_4_critic_9_child",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_9_critic_7_child",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_0_critic_8_child",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_5_critic_6_child",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}
+{
+    "id": "critic_5_critic_1_child",
+    "template": "",
+    "evaluation_criteria": [],
+    "scoring_rubric": "",
+    "fitness_score": 0.1666728687795011
+}

@@ -1,0 +1,107 @@
+{
+    "critic_0": {
+        "id": "critic_0",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_1": {
+        "id": "critic_1",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_2": {
+        "id": "critic_2",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_3": {
+        "id": "critic_3",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_4": {
+        "id": "critic_4",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_5": {
+        "id": "critic_5",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_6": {
+        "id": "critic_6",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_7": {
+        "id": "critic_7",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_8": {
+        "id": "critic_8",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_9": {
+        "id": "critic_9",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_4_critic_9_child": {
+        "id": "critic_4_critic_9_child",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_9_critic_7_child": {
+        "id": "critic_9_critic_7_child",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_0_critic_8_child": {
+        "id": "critic_0_critic_8_child",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_5_critic_6_child": {
+        "id": "critic_5_critic_6_child",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    },
+    "critic_5_critic_1_child": {
+        "id": "critic_5_critic_1_child",
+        "template": "",
+        "evaluation_criteria": [],
+        "scoring_rubric": "",
+        "fitness_score": 0.1666728687795011
+    }
+}

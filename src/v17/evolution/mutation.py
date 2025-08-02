@@ -1,6 +1,6 @@
 import json
 from src.v17.genome import PromptGenome, CriticGenome
-from src.v17.groq_client import GroqClient
+from src.groq_client import GroqClient
 
 def intelligent_mutation(genome: PromptGenome, groq_client: GroqClient) -> PromptGenome:
     """Performs intelligent mutation on a PromptGenome using an LLM."""

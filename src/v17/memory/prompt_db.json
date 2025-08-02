@@ -1,0 +1,182 @@
+{
+    "prompt_0": {
+        "id": "prompt_0",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_1": {
+        "id": "prompt_1",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_2": {
+        "id": "prompt_2",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_3": {
+        "id": "prompt_3",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_4": {
+        "id": "prompt_4",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_5": {
+        "id": "prompt_5",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_6": {
+        "id": "prompt_6",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_7": {
+        "id": "prompt_7",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_8": {
+        "id": "prompt_8",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_9": {
+        "id": "prompt_9",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_0_prompt_1_child": {
+        "id": "prompt_0_prompt_1_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_6_prompt_1_child": {
+        "id": "prompt_6_prompt_1_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_0_prompt_3_child": {
+        "id": "prompt_0_prompt_3_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_2_prompt_6_child": {
+        "id": "prompt_2_prompt_6_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_7_prompt_4_child": {
+        "id": "prompt_7_prompt_4_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_1_prompt_2_prompt_6_child_child": {
+        "id": "prompt_1_prompt_2_prompt_6_child_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_5_prompt_4_child": {
+        "id": "prompt_5_prompt_4_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_9_prompt_6_prompt_1_child_child": {
+        "id": "prompt_9_prompt_6_prompt_1_child_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_4_prompt_4_child": {
+        "id": "prompt_4_prompt_4_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    },
+    "prompt_7_prompt_8_child": {
+        "id": "prompt_7_prompt_8_child",
+        "template": "",
+        "persona_description": "",
+        "task_framing": "",
+        "output_format_instruction": "",
+        "constraints": [],
+        "fitness_score": 0.1
+    }
+}

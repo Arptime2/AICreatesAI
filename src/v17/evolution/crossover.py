@@ -1,7 +1,7 @@
 import json
 from typing import Tuple
 from src.v17.genome import PromptGenome, CriticGenome
-from src.v17.groq_client import GroqClient
+from src.groq_client import GroqClient
 
 def intelligent_crossover(parent1: PromptGenome, parent2: PromptGenome, groq_client: GroqClient) -> PromptGenome:
     """Performs intelligent crossover on two PromptGenomes using an LLM."""

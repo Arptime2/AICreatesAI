@@ -1,6 +1,7 @@
+import json
 from src.v17.genome import PromptGenome, CriticGenome
 from src.v17.memory.cognition_archive import CognitionArchive
-from src.v17.groq_client import GroqClient
+from src.groq_client import GroqClient
 
 class ResearcherAgent:
     """Generates new genomes based on the Cognition Archive."""
