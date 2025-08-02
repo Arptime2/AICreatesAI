@@ -1,45 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const diagramContainer = document.getElementById('diagram-container');
+    mermaid.initialize({ startOnLoad: true });
+
     const infoContent = document.getElementById('info-content');
-
-    const mermaidDefinition = `
-    graph TD
-        subgraph "COGNITIVE RECALIBRATION ENGINE (Outer Loop)"
-            direction TB
-            A[Meta-Prompt: Self-Writing AI Architect]
-        end
-
-        subgraph "TASK EXECUTION ENGINE (Inner Loop)"
-            direction LR
-            B(Code Generation Agent)
-            C(Test Generation Agent)
-            D(Verification Module)
-        end
-
-        subgraph "DATA & MEMORY"
-            direction TB
-            E[Operational Prompts Database]
-            F[Performance & Trace Logs]
-        end
-
-        A -- Rewrites & Improves --> E
-        E -- Provides Instructions --> B
-        B -- Source Code --> C
-        C -- Test Suite --> D
-        D -- Performance Data --> F
-        F -- Feeds Analysis --> A
-
-        click A callback "Meta-Prompt"
-        click B callback "CodeGenerationAgent"
-        click C callback "TestGenerationAgent"
-        click D callback "VerificationModule"
-        click E callback "OperationalPrompts"
-        click F callback "PerformanceLogs"
-    `;
-
-    mermaid.mermaidAPI.render('mermaid-diagram', mermaidDefinition, (svgCode) => {
-        diagramContainer.innerHTML = svgCode;
-    });
 
     const infoData = {
         "Meta-Prompt": {

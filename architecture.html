@@ -10,8 +10,41 @@
     <div id="container">
         <h1>AICAI V10 Architecture: Cognitive Recalibration</h1>
         <div id="diagram-container">
-            <!-- Diagram will be rendered here by script.js -->
+        <div class="mermaid">
+        graph TD
+            subgraph "COGNITIVE RECALIBRATION ENGINE (Outer Loop)"
+                direction TB
+                A[Meta-Prompt: Self-Writing AI Architect]
+            end
+
+            subgraph "TASK EXECUTION ENGINE (Inner Loop)"
+                direction LR
+                B(Code Generation Agent)
+                C(Test Generation Agent)
+                D(Verification Module)
+            end
+
+            subgraph "DATA & MEMORY"
+                direction TB
+                E[Operational Prompts Database]
+                F[Performance & Trace Logs]
+            end
+
+            A -- Rewrites & Improves --> E
+            E -- Provides Instructions --> B
+            B -- Source Code --> C
+            C -- Test Suite --> D
+            D -- Performance Data --> F
+            F -- Feeds Analysis --> A
+
+            click A callback "Meta-Prompt"
+            click B callback "CodeGenerationAgent"
+            click C callback "TestGenerationAgent"
+            click D callback "VerificationModule"
+            click E callback "OperationalPrompts"
+            click F callback "PerformanceLogs"
         </div>
+    </div>
         <div id="info-panel">
             <h2>Click on a component to learn more.</h2>
             <div id="info-content"></div>
