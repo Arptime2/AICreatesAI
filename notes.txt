@@ -1,49 +1,55 @@
-# AICAI - Architecture & Functionality Notes (V16 - Definitive)
+# AICAI - Architecture & Functionality Notes (V17 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive V16 architecture. This version implements a Hierarchical, Multi-Cycle System for Autonomous Scientific Discovery, a more plausible and detailed model inspired by the operational layers of advanced research systems. This design is robust, detailed, and specifically structured to be effective with a constrained LLM.
+**Purpose:** To define the final, definitive V17 architecture. This version implements a Massively Parallel, Competitive Co-evolutionary System, a highly detailed and scientifically-grounded model designed to foster genuine creativity and solve the problem of local optima in LLMs. This is a direct and rigorous response to the user's core request.
 
 ---
 
-## 1. Core Philosophy: Hierarchical, Multi-Cycle Operation
+## 1. Core Philosophy: Competitive Co-evolution
 
-This architecture abandons the simplistic, single-loop model in favor of a more realistic, hierarchical structure. The system operates on three distinct timescales, or cycles, each with a specific purpose. This separation of concerns allows for a more organized, plausible, and efficient approach to autonomous research, making it manageable for a small model.
-
-1.  **The Macro-Cycle (Strategic Research):** The slowest, highest level of thinking. It sets the broad research agenda.
-2.  **The Meso-Cycle (Experimental Design):** The middle layer, where a research direction is turned into a concrete, testable experiment.
-3.  **The Micro-Cycle (Engineering & Verification):** The fastest, lowest level of operation, where the experiment is executed and code is generated and tested.
+This architecture is a complete departure from previous, simplistic models. It is based on the principle of co-evolution, where two populations—a population of problem-solvers (`Prompts`) and a population of solution-evaluators (`Critics`)—evolve in parallel. This creates a dynamic, competitive "arms race" where better solutions drive the evolution of better critics, and better critics drive the evolution of better solutions. This is the most robust known method for escaping local optima and fostering genuine, unbounded creativity.
 
 ---
 
-## 2. Architectural Deep Dive - V16
+## 2. Architectural Deep Dive - V17
 
-### 2.1. The Macro-Cycle: The `Director` Agent
+### 2.1. The Dual Evolving Populations
 
--   **Role:** The system's strategic director.
--   **Timescale:** Runs infrequently (e.g., once every N experiments).
--   **Task:** To set the overall research direction. It analyzes the long-term trends from the `ExperimentDatabase` and consults the `CognitionArchive` to identify broad, promising areas for exploration. It does not design experiments itself; it writes a **Research Mandate**.
--   **Example Research Mandate:** "The system has reached a plateau in improving code efficiency. The `CognitionArchive` contains several papers on asynchronous programming. *Mandate:* Initiate a series of experiments to determine if adopting an asynchronous, event-driven model can improve performance without sacrificing correctness."
+1.  **The `Prompt` Population (The "Artists")**
+    -   **Structure:** A large population of `PromptGenome` objects, as defined previously.
+    -   **Goal:** To generate code that is not only functionally correct but also scores highly against the current population of `Critic` prompts.
 
-### 2.2. The Meso-Cycle: The `Researcher` & `Designer` Agents
+2.  **The `Critic` Population (The "Judges")**
+    -   **Structure:** A population of `CriticGenome` objects. Each genome defines a specific LLM-as-judge prompt that embodies a particular aspect of "quality" (e.g., a critic focused on code elegance, another on resource efficiency, another on adherence to a specific design pattern).
+    -   **Goal:** To become better at differentiating between high-quality and low-quality code. A `Critic`'s fitness is determined by how well its scores correlate with objective metrics and the scores of other high-performing `Critics`.
 
--   **Role:** The system's scientists.
--   **Timescale:** Runs once per experiment.
--   **Task:** To turn a `ResearchMandate` into a specific experiment.
-    1.  The **`Researcher` Agent** receives the mandate, consults the relevant papers in the `CognitionArchive`, and formulates a single, testable **Hypothesis**.
-    2.  The **`Designer` Agent** receives the hypothesis and designs the **Challenger Prompt Set** that will be used to test it.
+### 2.2. The Co-evolutionary Loop
 
-### 2.3. The Micro-Cycle: The `Engineer` Agent
+1.  **Initialization:** Both the `Prompt` and `Critic` populations are initialized with a diverse set of individuals, seeded with knowledge from the `CognitionArchive`.
 
--   **Role:** The system's hands-on developer.
--   **Timescale:** Runs continuously to execute the experiment.
--   **Task:** To run the `Code -> Test -> Self-Revise` loop. This is the fast, inner loop that generates and debugs the code until it passes all functional tests.
+2.  **Massively Parallel Evaluation:**
+    -   A large, diverse subset of `Prompts` is selected.
+    -   A large, diverse subset of `Critics` is selected.
+    -   Each selected `Prompt` is used by the `EngineerAgent` to generate a code solution.
+    -   Each generated solution is then evaluated by *every* selected `Critic`, creating a rich matrix of scores.
 
-### 2.4. The `Critic` and `Analyst` Agents
+3.  **Fitness Calculation:**
+    -   **For `Prompts`:** A `Prompt`'s fitness is its average score across the entire `Critic` population, combined with objective performance metrics.
+    -   **For `Critics`:** A `Critic`'s fitness is determined by its ability to identify solutions that are objectively better (e.g., more efficient) and to agree with other high-fitness `Critics`.
 
--   These agents remain as previously designed, providing the essential qualitative assessment and composite fitness scoring that guide the entire system.
+4.  **Evolution:**
+    -   The fittest `Prompts` are selected to reproduce (via crossover and mutation) to create the next generation of `Prompts`.
+    -   Simultaneously, the fittest `Critics` are selected to reproduce, creating the next generation of `Critics`.
+
+5.  The cycle repeats, creating a continuous, competitive pressure that drives both populations toward ever-increasing levels of sophistication.
+
+### 2.3. The `CognitionArchive` and the `EngineerAgent`
+
+-   **`CognitionArchive`:** Remains the bedrock of the system, providing the external, grounding knowledge to seed the initial populations and to inform intelligent mutations.
+-   **`EngineerAgent`:** Remains the robust workhorse with its essential self-revision mechanism, ensuring that all solutions evaluated by the `Critics` are, at a minimum, functionally correct.
 
 ---
 
-## 3. Visualization V13: The Definitive Hierarchical Model
+## 3. Visualization V14: The Definitive Co-evolutionary System
 
-I will now create the final, professional, and guaranteed-to-work interactive visualization. It will be a static SVG with manually embedded interactivity to ensure robustness and avoid all previous rendering errors. It will clearly illustrate the three distinct cycles of operation.
+I will now create the final, definitive interactive visualization. It will be a multi-part web application that clearly illustrates the dual-population structure and the competitive co-evolutionary loop.

@@ -62,16 +62,16 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: View the Definitive V16 Architecture
+## Architecture: View the Definitive V17 Architecture
 
-To provide the required level of detail, scientific formalism, and visual clarity, the project's architecture is now maintained in a standalone, interactive web application. This definitive V16 architecture implements a **Hierarchical, Multi-Cycle System for Autonomous Scientific Discovery**, a robust and plausible model inspired by the operational layers of advanced research systems.
+To provide the required level of detail, scientific formalism, and visual clarity, the project's architecture is now maintained in a standalone, interactive web application. This definitive V17 architecture implements a **Massively Parallel, Competitive Co-evolutionary System**, a robust and plausible model for achieving genuine creativity and unbounded improvement.
 
 This new visualization is:
--   **Definitive & Detailed:** It illustrates the final V16 architecture, clearly showing the three distinct operational cycles (Macro, Meso, and Micro) and the flow of information between the specialized agents and the central database.
--   **Interactive & Explanatory:** Click on any component in the diagram to receive a detailed explanation of its role in the hierarchical research process.
--   **Professionally Designed & Robust:** It is rendered as a static SVG with embedded interactivity, ensuring a clean, professional aesthetic and eliminating all previous rendering errors.
+-   **Definitive & Detailed:** It illustrates the final V17 architecture, centered on the co-evolution of two distinct populations: a population of `Prompts` (the Artists) and a population of `Critics` (the Judges).
+-   **Interactive & Multi-Part:** You can switch between a high-level overview, a detailed view of the Prompt evolution cycle, and a detailed view of the Critic evolution cycle.
+-   **Professionally Designed & Robust:** It uses a clean, modern, and professional aesthetic and is built with robust code to ensure a flawless interactive experience.
 
-**[Click here to explore the interactive V16 architecture diagram](./architecture.html)**
+**[Click here to explore the interactive V17 architecture diagram](./architecture.html)**
 
 This interactive diagram is the definitive representation of the AICAI project's architecture and its scientifically-grounded path to achieving unbounded creativity and improvement.
 

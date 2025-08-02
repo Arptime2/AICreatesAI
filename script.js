@@ -3,100 +3,84 @@ document.addEventListener('DOMContentLoaded', function () {
     const infoContent = document.getElementById('info-content');
     const initialText = document.querySelector('#info-panel h2');
 
-    // Static SVG definition for robustness
-    const svgContent = `
-    <svg width="100%" height="100%" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
-        <!-- Definitions -->
-        <defs>
-            <style>
-                .node-text { font-family: 'Inter', sans-serif; font-size: 18px; }
-                .label-text { font-family: 'Inter', sans-serif; font-size: 14px; fill: #555; }
-            </style>
-        </defs>
-
-        <!-- Macro-Cycle -->
-        <g id="Director" class="svg-node">
-            <rect x="400" y="50" width="400" height="80" rx="10" fill="#E3F2FD" stroke="#2196F3" stroke-width="2" />
-            <text x="600" y="95" text-anchor="middle" class="node-text"><b>Director Agent</b> (Macro-Cycle)</text>
-        </g>
-
-        <!-- Meso-Cycle -->
-        <g id="Researcher" class="svg-node">
-            <rect x="100" y="200" width="400" height="80" rx="10" fill="#E3F2FD" stroke="#2196F3" stroke-width="2" />
-            <text x="300" y="245" text-anchor="middle" class="node-text"><b>Researcher & Designer</b> (Meso-Cycle)</text>
-        </g>
-
-        <!-- Micro-Cycle -->
-        <g id="Engineer" class="svg-node">
-            <rect x="700" y="200" width="400" height="80" rx="10" fill="#E0F2F1" stroke="#009688" stroke-width="2" />
-            <text x="900" y="245" text-anchor="middle" class="node-text"><b>Engineer Agent</b> (Micro-Cycle)</text>
-        </g>
-
-        <!-- Critic & Analyst -->
-        <g id="Critic" class="svg-node">
-            <rect x="100" y="350" width="400" height="80" rx="10" fill="#FFF9C4" stroke="#FFEB3B" stroke-width="2" />
-            <text x="300" y="395" text-anchor="middle" class="node-text"><b>Critic & Analyst Agents</b></text>
-        </g>
-
-        <!-- Databases -->
-        <g id="DB" class="svg-node">
-            <rect x="400" y="500" width="400" height="120" rx="10" fill="#FFE0B2" stroke="#FF9800" stroke-width="3" />
-            <text x="600" y="550" text-anchor="middle" class="node-text"><b>Central Database</b></text>
-            <text x="600" y="580" text-anchor="middle" class="label-text">(Experiments, Prompts, Logs)</text>
-        </g>
-
-        <!-- Arrows -->
-        <path d="M600,130 L600,180 L300,180 L300,200" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
-        <text x="450" y="170" class="label-text">1. Research Mandate</text>
-        <path d="M300,280 L300,330 L900,330 L900,280" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
-        <text x="600" y="320" class="label-text">2. Challenger Prompt</text>
-        <path d="M900,280 L900,480 L600,480 L600,500" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
-        <text x="750" y="400" class="label-text">3. Performance Data</text>
-        <path d="M600,500 L600,480 L300,480 L300,430" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
-        <text x="450" y="470" class="label-text">4. Data for Assessment</text>
-        <path d="M300,350 L300,110 L400,110" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
-        <text x="350" y="140" class="label-text">5. Final Analysis</text>
-
-        <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
-            </marker>
-        </defs>
-    </svg>
-    `;
-
-    diagramContainer.innerHTML = svgContent;
+    const diagrams = {
+        "overview": `
+        graph TD
+            subgraph "COMPETITIVE CO-EVOLUTIONARY SYSTEM"
+                A[Prompt Population]
+                B[Critic Population]
+                C(Engineer Agent)
+                D[Cognition Archive]
+                A <--> C
+                B <--> C
+                D --> A
+                D --> B
+            end
+        `,
+        "prompt-cycle": `
+        graph TD
+            A[Prompt Population] --> B{Select Fittest Prompts}
+            B --> C{Crossover & Mutation}
+            C --> D[New Generation of Prompts]
+            D --> A
+        `,
+        "critic-cycle": `
+        graph TD
+            A[Critic Population] --> B{Select Fittest Critics}
+            B --> C{Crossover & Mutation}
+            C --> D[New Generation of Critics]
+            D --> A
+        `
+    };
 
     const infoData = {
-        "Director": {
-            title: "The Director Agent (Macro-Cycle)",
-            text: "The highest level of strategic thinking. The Director analyzes long-term trends from the database and consults the Cognition Archive to issue broad Research Mandates. It does not design or run experiments, but sets the overall research agenda for the entire system."
+        "overview": {
+            title: "System Overview",
+            text: "The V17 architecture is a competitive co-evolutionary system. Two populations, a population of Prompts (the Artists) and a population of Critics (the Judges), evolve in parallel. The Engineer Agent acts as the bridge, generating solutions from the Prompts and feeding the results to the Critics. The Cognition Archive provides the external knowledge to seed both populations with intelligent starting points."
         },
-        "Researcher": {
-            title: "The Researcher & Designer Agents (Meso-Cycle)",
-            text: "This is the scientific core of the system. The Researcher receives a Research Mandate and formulates a specific, testable hypothesis. The Designer then creates a concrete 'Challenger' prompt set to test that hypothesis against the current 'Champion'."
+        "prompt-cycle": {
+            title: "Prompt Evolution Cycle",
+            text: "The population of Prompts is constantly evolving. In each cycle, the fittest Prompts (those that generate the highest-scoring solutions) are selected. They are then used to create a new generation through crossover (combining the traits of two successful Prompts) and mutation (introducing small, random changes to explore new possibilities)."
         },
-        "Engineer": {
-            title: "The Engineer Agent (Micro-Cycle)",
-            text: "The hands-on developer. The Engineer executes the fast, inner loop of coding, testing, and, crucially, self-revising. It takes a prompt set and works until it produces a functionally correct, tested code artifact."
-        },
-        "Critic": {
-            title: "The Critic & Analyst Agents",
-            text: "The arbiters of quality and performance. The Critic provides a qualitative score for elegance and novelty, while the Analyst calculates the final, composite fitness score. This ensures the system evolves towards solutions that are not just correct, but genuinely superior."
-        },
-        "DB": {
-            title: "The Central Database",
-            text: "The single source of truth. All agents communicate asynchronously through this database. It stores the complete history of all experiments, prompts, performance logs, and qualitative assessments, providing the collective memory that enables long-term, structured learning."
+        "critic-cycle": {
+            title: "Critic Evolution Cycle",
+            text: "The population of Critics is also constantly evolving. In each cycle, the fittest Critics (those that are best at identifying high-quality solutions) are selected. They are then used to create a new generation, leading to a more sophisticated and nuanced understanding of what constitutes a 'good' solution."
         }
     };
 
-    document.querySelectorAll('.svg-node').forEach(node => {
-        node.addEventListener('click', () => {
-            const data = infoData[node.id];
-            if (data) {
-                initialText.style.display = 'none';
-                infoContent.innerHTML = `<h3>${data.title}</h3><p>${data.text}</p>`;
-            }
+    function renderDiagram(diagramId) {
+        mermaid.mermaidAPI.render('mermaid-diagram', diagrams[diagramId], (svgCode) => {
+            diagramContainer.innerHTML = svgCode;
         });
+        const data = infoData[diagramId];
+        if (data) {
+            initialText.style.display = 'none';
+            infoContent.innerHTML = `<h3>${data.title}</h3><p>${data.text}</p>`;
+        }
+    }
+
+    document.getElementById('overview-btn').addEventListener('click', () => {
+        renderDiagram('overview');
+        setActiveButton('overview-btn');
     });
+
+    document.getElementById('prompt-cycle-btn').addEventListener('click', () => {
+        renderDiagram('prompt-cycle');
+        setActiveButton('prompt-cycle-btn');
+    });
+
+    document.getElementById('critic-cycle-btn').addEventListener('click', () => {
+        renderDiagram('critic-cycle');
+        setActiveButton('critic-cycle-btn');
+    });
+
+    function setActiveButton(buttonId) {
+        document.querySelectorAll('#controls button').forEach(button => {
+            button.classList.remove('active');
+        });
+        document.getElementById(buttonId).classList.add('active');
+    }
+
+    // Initial render
+    renderDiagram('overview');
 });

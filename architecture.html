@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V16 Architecture: Hierarchical, Multi-Cycle System</title>
+    <title>AICAI V17 Architecture: Competitive Co-evolutionary System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="container">
-        <div id="diagram-container">
-            <!-- Static SVG will be embedded here -->
+        <div id="main-view">
+            <div id="diagram-container">
+                <!-- Main SVG diagram will be rendered here -->
+            </div>
+            <div id="controls">
+                <button id="overview-btn" class="active">System Overview</button>
+                <button id="prompt-cycle-btn">Prompt Evolution</button>
+                <button id="critic-cycle-btn">Critic Evolution</button>
+            </div>
         </div>
         <div id="info-panel">
             <h2>Click a component to see details.</h2>
             <div id="info-content"></div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
