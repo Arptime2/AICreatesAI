@@ -62,58 +62,18 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: Infinite Improvement via Genetic Prompt Optimization
+## Architecture: View the Definitive V8 Architecture
 
-Reactive error correction is not sufficient for true, unbounded improvement. Inspired by the evolutionary mechanisms of advanced AI research and genetic algorithms, this project implements a **Genetic Prompt Optimizer**. This system treats its own operational prompts not as static text, but as **"digital DNA"** to be continuously evolved and improved. The system doesn't just learn from its mistakes; it proactively seeks more intelligent ways to think and work.
+Previous attempts to represent the system's architecture within this README have been inadequate. To provide the level of detail, clarity, and visual quality required, I have created a standalone, web-based visualization.
 
-This is achieved through a continuous evolutionary cycle:
+This new visualization is:
+-   **Detailed:** It shows the complete V8 architecture, including the Genetic Prompt Optimizer and the Autonomous Development Cycle.
+-   **Readable:** It uses large, clear fonts and a high-contrast color scheme.
+-   **Visually Appealing:** It leverages modern web technologies to present a professional and easy-to-understand diagram.
 
-```
-          +----------------------------------------------------+
-          |           GENETIC PROMPT OPTIMIZER                 |
-          | (The Engine of Infinite Improvement)               |
-          +----------------------------------------------------+
-                           ^                                |
-                           |                                |
-      (5. New Generation of Prompts)                        | (1. Generate Population)
-                           |                                |
-                           |                                v
-+--------------------------------+      +-----------------------------------------+
-|    SELECTION & BREEDING        |      |      PROMPT POPULATION (The Gene Pool)    |
-| (Crossover & Mutation via LLM) |      |  (e.g., 10 variations of the Coder prompt) |
-+--------------------------------+      +-----------------------------------------+
-             ^                                                |
-             |                                                | (2. Test each prompt)
-             |                                                |
-(4. Select the Fittest Prompts)                               |
-             |                                                v
-+--------------------------------+      +-----------------------------------------+
-|         FITNESS SCORING        |      |        AUTONOMOUS DEVELOPMENT CYCLE       |
-|  (Success, Quality, Efficiency) |      |   (Plan -> Code -> Test -> Execute)     |
-+--------------------------------+      +-----------------------------------------+
-             ^                                                |
-             |                                                |
-             +------------------------------------------------+
-                       (3. Performance Data)
+**[Click here to view the interactive V8 architecture diagram](./architecture.html)**
 
-```
-
-### The Evolutionary Cycle: A Path to Unbounded Intelligence
-
-1.  **Population Generation:** The system starts by creating a diverse "population" of prompt variations for each of its core personas (`Architect`, `Coder`, `Test Developer`).
-
-2.  **Fitness Evaluation:** Each individual prompt variation is put to the test in the **Autonomous Development Cycle**. It is used to perform a series of benchmark tasks, and its performance is measured.
-
-3.  **Fitness Scoring:** A prompt's success is quantified with a **Fitness Score**, a formula that weighs key performance indicators:
-    -   **Task Success:** Did the resulting code pass the self-generated tests?
-    -   **Code Quality:** What is the score from static analysis tools?
-    -   **Efficiency:** How many resources (time, tokens) were consumed?
-
-4.  **Selection & Breeding:** The highest-scoring prompts—the "fittest" individuals—are selected. The system then uses an LLM to perform genetic operations:
-    -   **Crossover:** Combining the "DNA" of two successful prompts to create a new hybrid.
-    -   **Mutation:** Introducing small, random changes to a successful prompt to explore new possibilities.
-
-5.  **New Generation:** This new generation of evolved prompts replaces the old one. The single best-performing prompt is used for live tasks while the evolutionary cycle continues in the background, constantly seeking the next breakthrough in performance. This is the engine of infinite improvement.
+This diagram is the definitive representation of the AICAI project's architecture and its path to achieving true, unbounded improvement.
 
 
 ## Installation

@@ -1,101 +1,55 @@
-# AICAI - Architecture & Functionality Notes (V7)
+# AICAI - Architecture & Functionality Notes (V8 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** This document outlines a revolutionary new architecture (V7) that combines the principles of ASI-Arch with genetic algorithms for prompt engineering. This system is designed for true, proactive, and unbounded self-improvement by evolving its own "cognitive" processes.
+**Purpose:** To define the final, definitive architecture (V8) that incorporates a genetic algorithm for proactive improvement and to plan a high-quality, web-based visualization that is detailed, readable, and visually appealing.
 
 ---
 
-## 1. Core Philosophy: Evolving Intelligence
+## 1. Core Philosophy: A Synthesis of Evolutionary and Autonomous Design
 
-The user's request for "infinite improvement" and the insights from researching ASI-Arch and genetic prompt engineering necessitate a paradigm shift. Reactive error correction is not enough. The system must proactively seek better ways to perform its tasks, even when it is not failing. 
-
-**The New Core Concept: The Genetic Prompt Optimizer**
-
-The heart of the V7 architecture is a new component that treats the system's prompts not as static text, but as **"digital DNA"** to be evolved. This component will run a genetic algorithm to constantly improve the prompts used by all other personas, leading to a system that doesn't just learn from its mistakes, but actively seeks to improve its own intelligence.
+This architecture is the synthesis of all previous iterations. It achieves proactive, "infinite" improvement through a **Genetic Prompt Optimizer** that evolves the system's core intelligence. It grounds this evolution in reality through an **Autonomous Development Cycle** that writes, tests, and executes its own code. This is the most robust and complete vision for the AICAI project.
 
 ---
 
-## 2. Architectural Deep Dive - V7
+## 2. Architectural Deep Dive - V8
 
-### 2.1. The Genetic Prompt Optimizer
+The V8 architecture consists of two primary, interconnected loops:
 
-This is a new, high-level component that orchestrates the evolution of the system's prompts. It operates in a distinct "evolutionary cycle" that runs periodically.
+1.  **The Outer Loop (Evolutionary Engine):** This is the slow, strategic loop responsible for evolving the system's prompts using a genetic algorithm. This is the engine of long-term, proactive improvement.
+2.  **The Inner Loop (Autonomous Development):** This is the fast, tactical loop that uses the current best prompts to execute development tasks (Plan -> Code -> Test -> Execute).
 
-**The Evolutionary Cycle:**
+### 2.1. Key Components & Data Flow
 
-1.  **Population Generation:**
-    -   For each persona (`Architect`, `Coder`, `Test Developer`, `Reviewer`), the system will generate a diverse "population" of prompt variations. For example, it might generate 10 different versions of the `Coder` persona's prompt, each with slightly different wording, constraints, or examples.
+-   **Genetic Prompt Optimizer:** The master controller for the Outer Loop.
+    -   **Population Manager:** Creates and manages the population of prompt candidates for each persona.
+    -   **Fitness Calculator:** Scores each prompt candidate based on performance data from the Inner Loop.
+    -   **Evolutionary Operator (LLM-driven):** Performs crossover and mutation on the fittest prompts to create the next generation.
 
-2.  **Fitness Evaluation:**
-    -   Each prompt variation is tested in the real world by running a series of benchmark tasks.
-    -   A **Fitness Score** is calculated for each prompt based on a formula that measures:
-        -   **Success Rate:** Did the code produced by this prompt pass the tests?
-        -   **Code Quality:** A score from a static analysis tool (e.g., Ruff, SonarQube).
-        -   **Efficiency:** The time and resources used to complete the task.
-        -   **LLM Cost:** The number of tokens used.
+-   **Autonomous Development Engine:** The master controller for the Inner Loop.
+    -   **Personas (`Architect`, `Coder`, `Test Developer`, `Reviewer`):** Execute their tasks using the current champion prompts.
+    -   **Executor:** Runs tests and linters, providing objective feedback.
 
-3.  **Selection:**
-    -   The highest-scoring prompt variations (the "fittest") are selected to be the "parents" for the next generation.
-
-4.  **Crossover & Mutation:**
-    -   The system uses an LLM to perform "genetic operations" on the selected parent prompts:
-        -   **Crossover:** Combines elements of two high-performing prompts to create a new "child" prompt.
-        -   **Mutation:** Randomly alters a part of a high-performing prompt to introduce new, potentially beneficial variations.
-
-5.  **New Generation:**
-    -   The new generation of prompts (the children) replaces the old one, and the cycle repeats. The single best-performing prompt for each persona is used for the system's regular operations until the next evolutionary cycle.
-
-### 2.2. The Evolved Personas
-
-The existing personas (`Architect`, `Coder`, `Test Developer`, `Reviewer`) still exist, but they are now guided by the dynamically evolving prompts produced by the Genetic Prompt Optimizer.
-
-### 2.3. The `knowledge_base.md`
-
-The knowledge base is still crucial, but it now serves as a source of inspiration for the genetic algorithm. The `Prompt Optimizer` can use the rules in the knowledge base as a basis for mutations, ensuring that the system's learning is incorporated into the evolutionary process.
+-   **Memory:**
+    -   **Prompt Population DB:** A structured store (e.g., a JSON file) holding all prompt candidates and their fitness scores.
+    -   **Working Memory:** The short-term memory for the Inner Loop (code, plan, critique).
+    -   **Knowledge Base:** The long-term memory of distilled heuristics, which can be used to seed new prompt mutations.
 
 ---
 
-## 3. Visualization V5: The Evolutionary Cycle (ASCII Art)
+## 3. Visualization V6: High-Fidelity HTML Diagram
 
-To address the persistent issues with visual clarity, I will now use a carefully crafted ASCII and Unicode box-drawing diagram. This ensures maximum readability and a clean, professional aesthetic.
+The previous visualization methods were inadequate. I will create a standalone `architecture.html` file to render a superior diagram. This approach provides full control over styling, readability, and visual appeal.
 
-### New ASCII/Unicode Diagram Draft (V5)
+**Plan for `architecture.html`:**
 
-```
+1.  **HTML Structure:** A basic HTML5 boilerplate.
+2.  **Mermaid.js Library:** I will include the Mermaid.js library via a CDN to render the diagram from text-based code.
+3.  **Custom CSS:** This is the critical step. I will embed a `<style>` block to:
+    -   Set a dark theme for the background.
+    -   Define a vibrant, high-contrast color palette for different system components (e.g., blue for the inner loop, purple for the outer loop, orange for memory).
+    -   **Significantly increase the font size** for all text within the diagram.
+    -   Use a clean, modern font like 'Fira Code' or 'Inter'.
+    -   Style the nodes with rounded corners, borders, and shadows to give them a professional, card-like appearance.
+4.  **Mermaid Diagram Code:** The diagram itself will be highly detailed, showing the sub-components and the precise data flowing between them. It will clearly delineate the Outer (Evolutionary) and Inner (Development) loops.
 
-          +----------------------------------------------------+
-          |           GENETIC PROMPT OPTIMIZER                 |
-          | (The Engine of Infinite Improvement)               |
-          +----------------------------------------------------+
-                           ^                                |
-                           |                                |
-      (5. New Generation of Prompts)                        | (1. Generate Population)
-                           |                                |
-                           |                                v
-+--------------------------------+      +-----------------------------------------+
-|    SELECTION & BREEDING        |      |      PROMPT POPULATION (The Gene Pool)    |
-| (Crossover & Mutation via LLM) |      |  (e.g., 10 variations of the Coder prompt) |
-+--------------------------------+      +-----------------------------------------+
-             ^                                                |
-             |                                                | (2. Test each prompt)
-             |                                                |
-(4. Select the Fittest Prompts)                               |
-             |                                                v
-+--------------------------------+      +-----------------------------------------+
-|         FITNESS SCORING        |      |        AUTONOMOUS DEVELOPMENT CYCLE       |
-|  (Success, Quality, Efficiency) |      |   (Plan -> Code -> Test -> Execute)     |
-+--------------------------------+      +-----------------------------------------+
-             ^                                                |
-             |                                                |
-             +------------------------------------------------+
-                       (3. Performance Data)
-
-```
-
-**V5 Diagram Improvements:**
-
--   **Maximum Readability:** Uses standard, large-font characters. No rendering issues.
--   **Conceptual Clarity:** The diagram is a clear, circular flow that illustrates the evolutionary process. It's immediately obvious how the system improves itself.
--   **Professional Aesthetic:** The clean, structured layout is more professional and easier to understand than the previous diagrams.
-
-This V7 architecture, with its Genetic Prompt Optimizer, represents a true implementation of the user's request for a system that can proactively and infinitely improve itself, inspired by the advanced concepts of ASI-Arch.
+This approach will finally produce the "real visualization" the user has been asking for: detailed, readable, and aesthetically pleasing. I will now proceed with creating this file.
