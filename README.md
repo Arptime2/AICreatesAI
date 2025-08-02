@@ -62,16 +62,16 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: View the Definitive V10 Architecture
+## Architecture: View the Definitive V11 Architecture
 
 To provide the required level of detail, scientific formalism, and visual clarity, the project's architecture is now maintained in a standalone, interactive web application.
 
 This new visualization is:
--   **Scientifically Grounded:** It details the V10 architecture, which is centered on the principle of **Cognitive Recalibration** and is optimized for small models.
--   **Interactive & Detailed:** Click on any component in the diagram to receive a detailed explanation of its role and function within the system.
+-   **Definitive & Detailed:** It illustrates the final V11 architecture, centered on **Cognitive Recalibration**. It shows the sub-modules and the precise data flows that enable the system to reason about its own performance and rewrite its own logic.
+-   **Interactive & Explanatory:** Click on any component in the diagram to receive a detailed explanation of its role and its contribution to the system's autonomous improvement.
 -   **Professionally Designed:** It uses a clean, modern, and professional aesthetic for maximum readability and visual appeal.
 
-**[Click here to explore the interactive V10 architecture diagram](./architecture.html)**
+**[Click here to explore the interactive V11 architecture diagram](./architecture.html)**
 
 This interactive diagram is the definitive representation of the AICAI project's architecture and its powerful, intuitive path to achieving unbounded improvement.
 

@@ -3,50 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V10 Architecture: Cognitive Recalibration</title>
+    <title>AICAI V11 Architecture: Definitive Model</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="container">
-        <h1>AICAI V10 Architecture: Cognitive Recalibration</h1>
         <div id="diagram-container">
-        <div class="mermaid">
-        graph TD
-            subgraph "COGNITIVE RECALIBRATION ENGINE (Outer Loop)"
-                direction TB
-                A[Meta-Prompt: Self-Writing AI Architect]
-            end
+            <div class="mermaid">
+            graph TD
+                subgraph "META-COGNITIVE ENGINE (The Optimizer)"
+                    direction TB
+                    style MetaEngine fill:#E8EAF6,stroke:#3F51B5
+                    MetaEngine("<b>Meta-Cognitive Engine</b><br><i>Analyzes & Rewrites System Logic</i>")
 
-            subgraph "TASK EXECUTION ENGINE (Inner Loop)"
-                direction LR
-                B(Code Generation Agent)
-                C(Test Generation Agent)
-                D(Verification Module)
-            end
+                    subgraph "Sub-modules"
+                        direction LR
+                        style Analyzer fill:#C5CAE9,stroke:#7986CB
+                        style Rewriter fill:#C5CAE9,stroke:#7986CB
+                        Analyzer("<b>Performance Analyzer</b><br>Identifies root causes of failure")
+                        Rewriter("<b>Prompt Rewriter</b><br>Generates new, superior operational prompts")
+                    end
+                    MetaEngine --> Analyzer --> Rewriter
+                end
 
-            subgraph "DATA & MEMORY"
-                direction TB
-                E[Operational Prompts Database]
-                F[Performance & Trace Logs]
-            end
+                subgraph "AUTONOMOUS TASK CYCLE (The Worker)"
+                    direction TB
+                    style TaskCycle fill:#E0F2F1,stroke:#009688
+                    TaskCycle("<b>Autonomous Task Cycle</b><br><i>Executes development tasks</i>")
 
-            A -- Rewrites & Improves --> E
-            E -- Provides Instructions --> B
-            B -- Source Code --> C
-            C -- Test Suite --> D
-            D -- Performance Data --> F
-            F -- Feeds Analysis --> A
+                    subgraph "Agent Workflow"
+                        direction LR
+                        style CodeAgent fill:#B2DFDB,stroke:#4DB6AC
+                        style TestAgent fill:#B2DFDB,stroke:#4DB6AC
+                        style VerifyModule fill:#B2DFDB,stroke:#4DB6AC
+                        CodeAgent("<b>Code Generation Agent</b>")
+                        TestAgent("<b>Test Generation Agent</b>")
+                        VerifyModule("<b>Verification Module</b>")
+                    end
+                    TaskCycle --> CodeAgent -- "Source Code" --> TestAgent -- "Test Suite" --> VerifyModule
+                end
 
-            click A callback "Meta-Prompt"
-            click B callback "CodeGenerationAgent"
-            click C callback "TestGenerationAgent"
-            click D callback "VerificationModule"
-            click E callback "OperationalPrompts"
-            click F callback "PerformanceLogs"
+                subgraph "SYSTEM MEMORY"
+                    direction TB
+                    style PromptDB fill:#FFF3E0,stroke:#FFB74D
+                    style LogDB fill:#FFF3E0,stroke:#FFB74D
+                    PromptDB[["<b>Operational Prompts DB</b><br>The current 'source code' for the agents"]]
+                    LogDB[["<b>Performance Trace DB</b><br>Structured logs of all actions & results"]]
+                end
+
+                %% Data Flow
+                Rewriter -- "Writes New Prompts" --> PromptDB
+                PromptDB -- "Provides Operational Instructions" --> CodeAgent
+                PromptDB -- "Provides Operational Instructions" --> TestAgent
+                VerifyModule -- "Writes Structured Log" --> LogDB
+                LogDB -- "Provides Performance Data" --> Analyzer
+
+                %% Final Output
+                VerifiedCode[["<b>Verified Code Artifact</b>"]]
+                style VerifiedCode fill:#DCE775,stroke:#9CCC65,stroke-width:3px
+                VerifyModule --> VerifiedCode
+
+                %% Interactivity Callbacks
+                click MetaEngine callback "MetaEngine"
+                click Analyzer callback "Analyzer"
+                click Rewriter callback "Rewriter"
+                click TaskCycle callback "TaskCycle"
+                click CodeAgent callback "CodeAgent"
+                click TestAgent callback "TestAgent"
+                click VerifyModule callback "VerifyModule"
+                click PromptDB callback "PromptDB"
+                click LogDB callback "LogDB"
+            </div>
         </div>
-    </div>
         <div id="info-panel">
-            <h2>Click on a component to learn more.</h2>
+            <h2>Click a component to see details.</h2>
             <div id="info-content"></div>
         </div>
     </div>
