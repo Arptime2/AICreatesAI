@@ -1,69 +1,63 @@
-# AICAI - Architecture & Functionality Notes (V9 - Definitive)
+# AICAI - Architecture & Functionality Notes (V10 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive architecture (V9) that incorporates a scientifically-grounded, efficient evolutionary algorithm for prompt engineering, optimized specifically for small models. This version replaces informal concepts with formal terminology and focuses on parameter-efficient optimization.
+**Purpose:** To define the final, definitive architecture (V10). This version abandons the flawed genetic algorithm analogy in favor of a more powerful and intuitive model: **Cognitive Recalibration**, driven by a Self-Writing Meta-Prompt. This architecture is specifically designed for maximum efficiency and effectiveness with small language models.
 
 ---
 
-## 1. Core Philosophy: Efficient Evolutionary Prompt Engineering
+## 1. Core Philosophy: Cognitive Recalibration
 
-Previous architectures were not sufficiently optimized for the constraints of small models. This V9 architecture implements a more sophisticated and efficient approach: **Parameter-Efficient Prompt Optimization**. Instead of evolving large, unstructured blocks of text, the system will evolve specific, high-impact parameters within a structured prompt template. This dramatically reduces the search space, enabling faster convergence and making the process feasible for smaller, less powerful models.
+The fundamental flaw in previous designs was the method of improvement. A truly intelligent system, especially one with limited resources, should not rely on brute-force evolutionary methods. Instead, it should perform **root-cause analysis** and **rewrite its own logic** based on reasoned conclusions. 
 
-### 1.1. The Scientific Justification for Crossover and Mutation
-
-In the context of genetic algorithms, these operators are not random; they are essential for a robust search of the solution space.
-
--   **Recombination (Crossover):** This process combines elements from two successful parent prompts. Its purpose is to **exploit** existing good solutions by creating new combinations of proven successful traits. It allows the system to test the hypothesis that "mixing the best parts of two good prompts can create an even better one."
--   **Mutation:** This process introduces small, random changes to a prompt. Its purpose is to **explore** new, undiscovered areas of the solution space. It is the primary mechanism for innovation, preventing the algorithm from getting stuck in a local optimum and allowing for the discovery of novel, counter-intuitive solutions that would not arise from simple recombination.
-
-Together, they create a balanced search strategy that both refines existing solutions and discovers entirely new ones.
+This architecture is built on that principle. The system's core improvement mechanism is a **Cognitive Recalibration Cycle**, where a high-level reasoning agent (the Meta-Prompt) analyzes the system's performance and intelligently rewrites the operational instructions for its subordinate agents. This is analogous to a senior engineer observing a team, identifying systemic flaws in their workflow, and writing a new, improved standard operating procedure.
 
 ---
 
-## 2. Architectural Deep Dive - V9
+## 2. Architectural Deep Dive - V10
 
-### 2.1. The Core Component: The Prompt Genome
+### 2.1. The Self-Writing Meta-Prompt
 
-The central innovation is the concept of the **Prompt Genome**. Each prompt is no longer a simple string, but a structured object (a "genome") with specific, evolvable parameters ("genes").
+This is the heart of the new architecture. It is a single, powerful LLM prompt that functions as the system's executive reasoning core.
 
-```python
-@dataclass
-class PromptGenome:
-    # A fixed, structural template for the prompt
-    template: str 
-    
-    # Evolvable parameters ("genes")
-    persona_description: str # e.g., "You are a senior test developer."
-    task_framing: str # e.g., "Your task is to..."
-    output_format_instruction: str # e.g., "Provide your output as a JSON array."
-    constraints: List[str] # e.g., ["The code must be written in Python 3.9.", "All functions must have docstrings."]
-    temperature: float # A parameter for the LLM call itself
-```
+-   **Objective:** To generate and refine the operational prompts used by the specialized agents.
+-   **Process:** At the end of a task cycle, the Meta-Prompt is invoked with a comprehensive performance report.
+-   **Input:** 
+    -   The user's high-level goal.
+    -   The complete set of previously used operational prompts.
+    -   A structured performance log including: test pass/fail rates, linting errors, code churn (how much code had to be changed to fix bugs), and efficiency metrics (token usage, execution time).
+-   **Task:** "You are an expert AI Systems Architect. Your goal is to optimize a team of specialized AI agents. Analyze the provided performance report and the prompts that produced it. Identify the root cause of any failures or inefficiencies. Your output must be a complete, rewritten set of operational prompts in JSON format. These new prompts must be designed to prevent the observed failures and improve overall performance in the next cycle."
+-   **Output:** A JSON object containing the new, improved operational prompts for all agents.
 
-The genetic algorithm will now operate on these structured parameters, not on the entire text blob. This is far more efficient.
+### 2.2. The Task Execution Engine
 
-### 2.2. The Evolutionary Engine
+This is the "team" of specialized agents that perform the actual work, guided by the prompts generated by the Meta-Prompt.
 
--   **Specialized Agents:** The system employs a set of specialized agents (formerly "personas"), such as the `CodeGenerationAgent` and the `TestGenerationAgent`.
--   **The Evolutionary Cycle:**
-    1.  **Initialization:** The system creates an initial population of `PromptGenome` objects with diverse parameter values.
-    2.  **Fitness Evaluation:** Each `PromptGenome` is used to configure and run its corresponding agent through a series of benchmark tasks. A **Fitness Score** is calculated based on empirical performance (test pass rate, code quality, efficiency).
-    3.  **Selection:** The genomes with the highest fitness scores are selected for reproduction.
-    4.  **Recombination (Crossover):** A new `PromptGenome` is created by combining parameters from two parent genomes. For example, the child might inherit the `persona_description` from parent A and the `constraints` from parent B.
-    5.  **Mutation:** A parameter within a genome is randomly altered. For example, a constraint might be rephrased, or the `temperature` might be slightly adjusted. This is a targeted, surgical change.
+-   **`CodeGenerationAgent`:** Uses its current operational prompt to write code that satisfies a specific task.
+-   **`TestGenerationAgent`:** Uses its current operational prompt to write unit tests for the code produced by the Code Generation Agent.
+-   **`VerificationModule`:** A non-LLM component that executes the tests and static analysis tools, capturing the objective performance data.
 
-This parameter-efficient approach allows the system to rapidly test hypotheses about what makes a prompt effective, leading to faster and more meaningful improvements.
+### 2.3. The Cognitive Recalibration Cycle
+
+1.  **Execute:** The Task Execution Engine runs, using the current set of operational prompts to complete a task. The Verification Module logs all performance data.
+2.  **Analyze & Synthesize:** The Meta-Prompt is invoked. It analyzes the performance data and the prompts that generated it.
+3.  **Recalibrate:** The Meta-Prompt writes a new, superior set of operational prompts.
+4.  **Replace:** The old operational prompts are replaced with the new, improved set.
+5.  The cycle repeats on the next task, now operating with an improved cognitive framework.
+
+### 2.4. Why This is Optimized for Small Models
+
+-   **Reduced Complexity:** It replaces the complex, multi-step process of selection, crossover, and mutation with a single, powerful reasoning step. This is a more direct and efficient use of the LLM.
+-   **Focused Reasoning:** A small model excels at focused, context-rich tasks. The Meta-Prompt provides exactly that: a clear goal, specific data to analyze, and a structured output format. It's a difficult but well-defined problem, perfect for a small model to tackle.
+-   **High-Impact Changes:** Instead of making tiny, random mutations, the Meta-Prompt can make large, intelligent changes to the operational prompts based on a holistic analysis, leading to much faster improvements.
 
 ---
 
-## 3. Visualization V7: Professional Scientific Diagram
+## 4. Visualization V8: Interactive Web Application
 
-This new visualization will be rendered in a new `architecture.html` file. It will use formal terminology and a professional, academic color palette to accurately represent the sophisticated V9 architecture.
+To finally meet the user's expectations, I will build a multi-file, interactive web visualization.
 
-**Plan for `architecture.html` (V2):**
+-   `architecture.html`: The core HTML structure.
+-   `style.css`: A dedicated stylesheet for a professional, modern, and visually appealing design.
+-   `script.js`: JavaScript to enable interactivity, allowing the user to click on components to get detailed explanations.
 
--   **Formal Language:** All nodes and labels will use the new, formal terminology.
--   **Detailed Flow:** The diagram will explicitly show the flow of `PromptGenome` objects and the distinction between the fixed `template` and the evolvable `parameters`.
--   **Professional Aesthetics:** A clean, academic color scheme (e.g., blues, greys, and greens) will be used. The layout will be structured to clearly separate the Evolutionary Engine from the Task Execution Engine.
-
-This V9 architecture and V7 visualization will finally meet the user's requirements for a scientifically-grounded, efficient, and professionally-presented system.
+This will provide a truly professional and informative representation of the definitive V10 architecture.

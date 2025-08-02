@@ -3,81 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V9 Architecture - Efficient Evolutionary Prompt Engineering</title>
-    <style>
-        body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            background-color: #F5F5F5;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            width: 95%;
-            max-width: 1800px;
-        }
-    </style>
+    <title>AICAI V10 Architecture: Cognitive Recalibration</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="mermaid">
-        graph TD
-            subgraph "EVOLUTIONARY ENGINE (Outer Loop)"
-                direction TB
-                style EvoEngine fill:#E3F2FD,stroke:#90CAF9
-                EvoEngine("<b>Evolutionary Engine</b><br><i>Optimizes Prompt Genomes</i>")
-
-                subgraph "Genetic Operators"
-                    direction LR
-                    style Selection fill:#BBDEFB,stroke:#90CAF9
-                    style Recombination fill:#BBDEFB,stroke:#90CAF9
-                    style Mutation fill:#BBDEFB,stroke:#90CAF9
-                    Selection("<b>Selection Operator</b><br>Selects fittest genomes")
-                    Recombination("<b>Recombination (Crossover)</b><br>Combines genome parameters")
-                    Mutation("<b>Mutation Operator</b><br>Innovates by altering parameters")
-                end
-
-                EvoEngine --> Selection --> Recombination --> Mutation
-            end
-
-            subgraph "TASK EXECUTION ENGINE (Inner Loop)"
-                direction LR
-                style CodeAgent fill:#C8E6C9,stroke:#A5D6A7
-                style TestAgent fill:#B2DFDB,stroke:#80CBC4
-                style Executor fill:#DCE775,stroke:#D4E157
-
-                CodeAgent("<b>Code Generation Agent</b>")
-                TestAgent("<b>Test Generation Agent</b>")
-                Executor("<b>Execution & Verification Module</b>")
-
-                CodeAgent -- "Source Code" --> TestAgent
-                TestAgent -- "Test Suite" --> Executor
-                Executor -- "Execution Result (Pass/Fail)" --> CodeAgent
-            end
-
-            subgraph "DATA & MEMORY"
-                direction TB
-                style GenomeDB fill:#FFCCBC,stroke:#FFAB91
-                style KnowledgeBase fill:#FFCCBC,stroke:#FFAB91
-                GenomeDB[["<b>Prompt Genome Database</b><br>Population of structured prompts<br>with evolvable parameters"]]
-                KnowledgeBase[["<b>Persistent Knowledge Base</b><br>Distilled heuristics to seed mutations"]]
-            end
-
-            %% Connections
-            Mutation -- "Creates Next Generation of Genomes" --> GenomeDB
-            GenomeDB -- "Provides Prompt Genome for Task" --> CodeAgent
-            Executor -- "Provides Performance Data for Fitness Calculation" --> EvoEngine
-            KnowledgeBase -- "Provides Heuristics for Targeted Mutations" --> Mutation
-
-            FinalCode[["<b>Verified & Tested Code Artifact</b>"]] 
-            style FinalCode fill:#A5D6A7,stroke:#66BB6A,stroke-width:2px
-            Executor --> FinalCode
+    <div id="container">
+        <h1>AICAI V10 Architecture: Cognitive Recalibration</h1>
+        <div id="diagram-container">
+            <!-- Diagram will be rendered here by script.js -->
+        </div>
+        <div id="info-panel">
+            <h2>Click on a component to learn more.</h2>
+            <div id="info-content"></div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="script.js"></script>
 </body>
 </html>
