@@ -62,74 +62,60 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture Flow: Succeeding with Small Models
+## Architecture: A Lean Interpretation of ASI-Arch
 
-The core challenge with small models (e.g., 8B parameters) is their limited context window. They cannot comprehend an entire codebase at once. Our architecture overcomes this by mimicking the focused, iterative workflow of a human developer, inspired by the multi-agent approach of ASI-Arch.
+The ASI-Arch project pioneers a powerful concept: a society of AI agents that collaborate to solve complex problems. We adapt this philosophy to a leaner, single-agent model that embodies different specialist roles through carefully crafted prompts. This allows a small 8B model to "wear different hats"—Architect, Coder, and Reviewer—to achieve a result far greater than the sum of its parts.
 
-The process is not a single call to an LLM but a structured dialogue orchestrated by our CLI tool. Each step is a targeted, context-specific query.
+Our architecture is not just a sequence of prompts; it's a stateful, recursive loop where the output of one phase serves as the structured input for the next. This is how we overcome the inherent context limitations of small models.
 
 ```mermaid
 graph TD
-    subgraph "User Input"
-        A[User Prompt: "Create a FastAPI auth endpoint"]
-        B[Optional File: `api.py`]
+    A[Start: User Prompt & Optional Code] --> B{Phase 1: The Architect};
+    B -- Plan --> C{Phase 2: The Coder};
+    C -- Generated Code --> D{Phase 3: The Reviewer};
+    D -- Refined Code --> E[Final Output];
+
+    subgraph "Orchestration Loop (recursive_improver.py)"
+        B -- LLM Call 1: Create Plan --> B;
+        C -- LLM Calls 2..N: Execute Plan Step-by-Step --> C;
+        D -- LLM Call N+1: Refine & Correct --> D;
     end
 
-    subgraph "Phase 1: Planning (The Architect)"
-        C{LLM Call 1: High-Level Plan} --> D[Plan Created];
-        A -- Prompt --> C;
-        C -- "You are a senior architect..." --> C
-    end
+    style A fill:#fff,stroke:#333,stroke-width:2px
+    style E fill:#fff,stroke:#333,stroke-width:2px
+    style B fill:#f2b04d,stroke:#333,stroke-width:2px
+    style C fill:#4da6f2,stroke:#333,stroke-width:2px
+    style D fill:#4df2a6,stroke:#333,stroke-width:2px
 
-    subgraph "Phase 2: Execution Loop (The Coder)"
-        D -- For each step --> E{LLM Call 2..N: Write/Modify Code};
-        B -- Initial Code --> E;
-        E -- "You are a coder. Implement this specific step..." --> E;
-        E -- Appends to --> F[Updated Code State];
-        F -- Feeds back into next step --> E;
-    end
-
-    subgraph "Phase 3: Refinement (The Reviewer)"
-        F --> G{LLM Call N+1: Review & Refine};
-        G -- "You are a code reviewer. Find bugs and improve this..." --> G;
-    end
-
-    subgraph "Final Output"
-        G --> H[Improved `api.py`];
-    end
-
-    A --> C;
-    B --> E;
-    D --> E;
-    F --> G;
-    G --> H;
-
-    style C fill:#f2b04d,stroke:#333,stroke-width:2px
-    style E fill:#4da6f2,stroke:#333,stroke-width:2px
-    style G fill:#4df2a6,stroke:#333,stroke-width:2px
+    linkStyle 0 stroke-width:2px,fill:none,stroke:black;
+    linkStyle 1 stroke-width:2px,fill:none,stroke:black;
+    linkStyle 2 stroke-width:2px,fill:none,stroke:black;
 ```
 
-### How It Works in Detail:
+### The Three Phases of Recursive Improvement:
 
-1.  **Phase 1: The Architect (Planning)**
-    -   **Input**: The user's high-level goal.
-    -   **Persona**: The tool prompts the LLM to act as a *senior architect*.
-    -   **Task**: Create a bullet-point plan. For example: "1. Add `fastapi` and `passlib` to requirements. 2. Create a `User` model. 3. Implement a `/token` endpoint."
-    -   **Why it works**: This initial step structures the problem without needing to see any code. It establishes a roadmap, which is a task even small models excel at.
+1.  **Phase 1: The Architect (High-Level Planning)**
+    -   **Role**: The LLM is prompted to act as a systems architect.
+    -   **Input**: The user's raw request (e.g., "Build a Redis-backed caching layer for a Django app").
+    -   **Process**: The model produces a high-level, step-by-step plan. It does *not* write code. It only thinks about the structure, components, and sequence of actions.
+    -   **Output**: A structured plan (e.g., `["1. Install redis-py", "2. Configure Django settings", "3. Create a cache utility module"]`).
+    -   **Why It's Better**: By separating planning from coding, we ensure the overall structure is logical *before* a single line of code is written. This prevents the model from getting lost in implementation details and producing unstructured, monolithic scripts.
 
-2.  **Phase 2: The Coder (Execution Loop)**
-    -   **Input**: The plan, the current code state, and *one specific step* from the plan.
-    -   **Persona**: The tool prompts the LLM to act as a *focused coder*.
-    -   **Task**: "Here is the current code. Now, implement *only* step 2: Create a `User` model."
-    -   **Why it works**: This is the key to overcoming the context limit. The LLM is never asked to write the whole application. It is given a very small, manageable chunk of code and one single, isolated instruction. The output of one step becomes the input for the next, building the code incrementally.
+2.  **Phase 2: The Coder (Focused Execution)**
+    -   **Role**: The LLM now acts as a junior developer receiving a specific ticket.
+    -   **Input**: The full plan (for context), the *current code state*, and **only one** specific step from the plan (e.g., "2. Configure Django settings").
+    -   **Process**: The `recursive_improver` loops through the plan. In each iteration, it feeds the model the current code and the next task. The model's output (the newly generated code) is immediately integrated, updating the code state for the next loop.
+    -   **Output**: A block of code that accomplishes one specific task.
+    -   **Why It's Better**: This is the core of our small-model optimization. The context window is never filled with the entire desired application. It contains only the immediately relevant code and a single, clear instruction. This mimics how a human developer focuses on one function at a time, preventing cognitive overload and ensuring high-quality, context-aware code for each part of the application.
 
-3.  **Phase 3: The Reviewer (Refinement)**
-    -   **Input**: The complete, generated code from the execution loop.
-    -   **Persona**: The tool prompts the LLM to act as a *senior code reviewer*.
-    -   **Task**: "Review the following code for bugs, style issues, and potential improvements."
-    -   **Why it works**: This final pass allows the model to catch errors or inconsistencies that might have been introduced during the step-by-step generation. It smooths the edges and ensures the final output is coherent and correct.
+3.  **Phase 3: The Reviewer (Quality Assurance)**
+    -   **Role**: The LLM transforms into a senior engineer performing a code review.
+    -   **Input**: The *complete* code generated during the Coder phase.
+    -   **Process**: The model is prompted to critically analyze the code for bugs, style violations, and potential improvements. It is explicitly told to act as a quality gate.
+    -   **Output**: The final, refined code, ready for the user.
+    -   **Why It's Better**: This self-correction step is crucial. The step-by-step generation in Phase 2 can sometimes lead to minor inconsistencies. The Reviewer phase smooths these out, adds docstrings, and catches subtle errors that a pure generation process might miss. It ensures the final product is not just functional, but robust and maintainable.
 
-This structured, multi-persona approach allows a small, fast 8B model to punch far above its weight, producing code that is planned, executed, and reviewed in a process that is more robust than a single, monolithic prompt.
+This architecture is more than just a prompt chain; it's a deliberate, stateful process that uses role-playing and recursion to elevate the capabilities of a small LLM to rival those of a much larger model, delivering on the promise of efficient, high-quality, AI-driven development.
 
 
 ## Installation
