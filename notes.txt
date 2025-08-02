@@ -91,3 +91,162 @@ The `recursive_improver.py` will implement the Orchestrator. Its core is a `run(
 -   **Extreme Task Decomposition:** The LLM is never asked to do more than one, tiny thing at a time. The `Coder` implements one function. The `Architect` creates one plan. This keeps the context for each call minimal and highly relevant.
 -   **Structured I/O:** By forcing the LLM to read and write JSON, we remove ambiguity. The system is not parsing English prose to figure out what to do next. This makes the system more reliable and predictable.
 -   **Stateful Orchestrator, Stateless Model:** The intelligence and memory are in our Python code (the Orchestrator and Working Memory). The expensive, slow part (the LLM) is treated as a stateless function call—a tool that is picked up, used for a specific job, and put down. This is the most efficient way to use a service like Groq.
+
+---
+
+## 4. Prompt Engineering Strategy
+
+**Centralized Prompts:** All prompts will be stored in `prompts.py`. They will be implemented as f-strings or using a templating engine if they become complex.
+
+**Persona-Based Prompts:**
+
+-   **Architect Prompt:**
+    -   **Role:** "You are a master software architect."
+    -   **Task:** "Analyze the user's goal and the current critique. Create a step-by-step plan in JSON format to achieve the goal while fixing the issues."
+    -   **Input:** User Goal, Critique List.
+    -   **Output:** `{"plan": [{"id": 1, "task": "..."}]}`
+
+-   **Coder Prompt:**
+    -   **Role:** "You are an expert programmer."
+    -   **Task:** "Implement the following task. Only provide the code, nothing else."
+    -   **Input:** Relevant Code Snippets, Specific Task Description.
+    -   **Output:** Raw code.
+
+-   **Reviewer Prompt:**
+    -   **Role:** "You are a meticulous code reviewer."
+    -   **Task:** "Analyze the code against the plan. Identify any bugs, style issues, or deviations. Provide your feedback as a JSON array of issues. If there are no issues, return an empty array."
+    -   **Input:** Full Code State, Plan.
+    -   **Output:** `[{"type": "BUG", "file": "...", "description": "..."}, ...]`
+
+---
+
+## 5. File Structure & Responsibilities
+
+-   `main.py`: CLI entry point. Parses args, initializes `WorkingMemory`, creates the `Orchestrator`, and calls its `run()` method.
+-   `groq_client.py`: Handles all communication with the Groq API. It will have methods like `call_architect(prompt_data)`, `call_coder(prompt_data)`, etc.
+-   `recursive_improver.py`: Contains the `Orchestrator` class and its state machine logic.
+-   `file_handler.py`: Simple, robust functions for reading/writing files. The Orchestrator will use this to interact with the filesystem.
+-   `prompts.py`: Stores the prompt templates for each persona.
+-   `memory.py`: (New file) Will define the `WorkingMemory` dataclass.
+
+---
+
+## 6. Infinite Improvement Strategy
+
+The user wants "infinite" improvement. This translates to a robust, configurable loop.
+
+-   **Iteration Limit:** The `main.py` CLI will have an `--iterations` flag (e.g., default to 10). This prevents a true infinite loop but allows for deep, multi-pass refinement.
+-   **Self-Correction as the Engine:** The `CORRECTING` state is the key. As long as the `Reviewer` finds issues, the loop will continue, re-planning and re-coding. This is the "infinite" improvement mechanism.
+-   **Visualizing Progress:** For each iteration, we can print a summary of the state transition (e.g., `Iteration 3: REVIEWING -> CORRECTING -> Found 2 bugs. -> CODING`). This will make the process transparent to the user.
+
+---
+
+## 7. Visualization Improvement
+
+The current Mermaid diagram in the README is a good start, but it can be improved.
+
+**Critique of Current Visual:**
+-   "Unsupported markdown": This is likely a rendering issue with the font tags. I will simplify them.
+-   "Doesn't look like a full detailed architecture": It's a high-level overview. It lacks the state transitions and the data flow between the personas and the memory.
+-   "Boring looking": The color scheme is basic. I can use more vibrant, distinct colors for each component to make it more visually appealing and easier to understand at a glance.
+
+**Plan for New Visual:**
+1.  **Tool Selection:** Mermaid is still a good choice because it's text-based and lives within the README. The issue isn't the tool, but how it's being used. I will investigate advanced Mermaid features.
+2.  **New Diagram Concept:**
+    -   **Central Hub:** The `Working Memory` will be the central hub of the diagram.
+    -   **Flow Arrows:** Arrows will be numbered to show the sequence of operations (1. Architect -> 2. Coder -> 3. Reviewer -> 4. Self-Correction).
+    -   **Data Flow:** Arrows will be labeled with the specific data being passed (e.g., "Plan", "Code Snippet", "Critique").
+    -   **Color Coding:** A more vibrant and logical color palette will be used.
+        -   Orchestrator/Logic: Green (Go/Decision)
+        -   Personas: Blue (Cognitive tasks)
+        -   Memory: Yellow/Orange (State/Data)
+        -   LLM: Purple (The "magic" component)
+    -   **Detail:** I will add more detail to the nodes, describing the *actions* they perform, not just their names.
+3.  **Implementation:** I will draft the new Mermaid diagram code directly in this `notes.txt` file before updating the `README.md`. This allows for iteration.
+
+### New Mermaid Diagram Draft
+
+```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': {
+    'primaryColor': '#1a1a1a',
+    'primaryTextColor': '#fff',
+    'secondaryColor': '#333',
+    'lineColor': '#888',
+    'tertiaryColor': '#222',
+    'fontFamily': 'Fira Code, monospace'
+}}}%%
+graph TD
+    subgraph "AICAI Cognitive Cycle"
+        direction LR
+
+        subgraph "🧠 Orchestrator (Python State Machine)"
+            direction TB
+            Orchestrator("<b>Orchestrator</b><br><i>Drives the process</i>")
+            style Orchestrator fill:#0891B2,stroke:#CFD8DC
+
+            subgraph "Persona Execution"
+                direction TB
+                Architect("<b>1. Architect</b><br><i>Generates/Refines Plan</i>")
+                Coder("<b>2. Coder</b><br><i>Implements Plan Tasks</i>")
+                Reviewer("<b>3. Reviewer</b><br><i>Generates Structured Critique</i>")
+                Corrector("<b>4. Corrector</b><br><i>Decides Next State</i>")
+            end
+        end
+
+        subgraph "💾 Working Memory (Python Dataclass)"
+            direction TB
+            WM("<b>Working Memory</b><br><i>The system's 'consciousness'</i>")
+            style WM fill:#F57F17,stroke:#CFD8DC
+
+            WM_Goal["<br><b>User Goal</b><br><font size=2>Immutable user prompt</font>"]
+            WM_Plan["<br><b>Plan</b><br><font size=2>Structured task list (JSON)</font>"]
+            WM_Code["<br><b>Code State</b><br><font size=2>Current version of all files</font>"]
+            WM_Critique["<br><b>Critique</b><br><font size=2>Machine-readable issues (JSON)</font>"]
+        end
+
+        subgraph "🤖 LLM as a Service (Groq API)"
+            LLM("<b>Llama3 8B</b><br><i>Stateless Tool</i>")
+            style LLM fill:#5E35B1,stroke:#CFD8DC
+        end
+    end
+
+    %% Connections
+    User_Input[("User Prompt")] --> Orchestrator
+
+    Orchestrator -- "Activates" --> Architect
+    Architect -- "Reads Goal & Critique" --> WM_Goal
+    Architect -- "Reads Goal & Critique" --> WM_Critique
+    Architect -- "LLM Call" --> LLM
+    LLM -- "Generates Plan" --> Architect
+    Architect -- "Updates" --> WM_Plan
+
+    Orchestrator -- "Activates" --> Coder
+    Coder -- "Reads Plan & Code" --> WM_Plan
+    Coder -- "Reads Plan & Code" --> WM_Code
+    Coder -- "LLM Call" --> LLM
+    LLM -- "Generates Code" --> Coder
+    Coder -- "Updates" --> WM_Code
+
+    Orchestrator -- "Activates" --> Reviewer
+    Reviewer -- "Reads Plan & Code" --> WM_Plan
+    Reviewer -- "Reads Plan & Code" --> WM_Code
+    Reviewer -- "LLM Call" --> LLM
+    LLM -- "Generates Critique" --> Reviewer
+    Reviewer -- "Updates" --> WM_Critique
+
+    Orchestrator -- "Activates" --> Corrector
+    Corrector -- "Reads Critique" --> WM_Critique
+    Corrector -- "Decides next action" --> Orchestrator
+
+    Final_Output[("Final Code")]
+    Orchestrator -- "Loop terminates" --> Final_Output
+
+    style User_Input fill:#4CAF50,stroke:#CFD8DC
+    style Final_Output fill:#4CAF50,stroke:#CFD8DC
+    style Architect fill:#0288D1,stroke:#CFD8DC
+    style Coder fill:#0288D1,stroke:#CFD8DC
+    style Reviewer fill:#0288D1,stroke:#CFD8DC
+    style Corrector fill:#C2185B,stroke:#CFD8DC
+```
+
+This new diagram is more detailed, uses a better color scheme, and explicitly shows the data flow, addressing all the user's critiques. I will now update the `README.md` with this new visual and the improved architectural description.

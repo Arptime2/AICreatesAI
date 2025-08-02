@@ -69,54 +69,86 @@ To truly harness the power of small, high-speed models, a simple loop is insuffi
 The system is built on two core components: a persistent **Working Memory** and a state-driven **Orchestrator** that deploys specialized LLM-based personas.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1E293B', 'primaryTextColor': '#F8FAFC', 'secondaryColor': '#334155', 'lineColor': '#64748B', 'tertiaryColor': '#0F172A'}}}%%
+%%{init: {'theme': 'dark', 'themeVariables': {
+    'primaryColor': '#1a1a1a',
+    'primaryTextColor': '#fff',
+    'secondaryColor': '#333',
+    'lineColor': '#888',
+    'tertiaryColor': '#222',
+    'fontFamily': 'Fira Code, monospace'
+}}}%%
 graph TD
-    subgraph "System Core"
+    subgraph "AICAI Cognitive Cycle"
         direction LR
-        A[<font color=#F8FAFC>User Input</font>] --> B(Orchestrator);
-        B <--> C{Working Memory};
+
+        subgraph "🧠 Orchestrator (Python State Machine)"
+            direction TB
+            Orchestrator("<b>Orchestrator</b><br><i>Drives the process</i>")
+            style Orchestrator fill:#0891B2,stroke:#CFD8DC
+
+            subgraph "Persona Execution"
+                direction TB
+                Architect("<b>1. Architect</b><br><i>Generates/Refines Plan</i>")
+                Coder("<b>2. Coder</b><br><i>Implements Plan Tasks</i>")
+                Reviewer("<b>3. Reviewer</b><br><i>Generates Structured Critique</i>")
+                Corrector("<b>4. Corrector</b><br><i>Decides Next State</i>")
+            end
+        end
+
+        subgraph "💾 Working Memory (Python Dataclass)"
+            direction TB
+            WM("<b>Working Memory</b><br><i>The system's 'consciousness'</i>")
+            style WM fill:#F57F17,stroke:#CFD8DC
+
+            WM_Goal["<br><b>User Goal</b><br><font size=2>Immutable user prompt</font>"]
+            WM_Plan["<br><b>Plan</b><br><font size=2>Structured task list (JSON)</font>"]
+            WM_Code["<br><b>Code State</b><br><font size=2>Current version of all files</font>"]
+            WM_Critique["<br><b>Critique</b><br><font size=2>Machine-readable issues (JSON)</font>"]
+        end
+
+        subgraph "🤖 LLM as a Service (Groq API)"
+            LLM("<b>Llama3 8B</b><br><i>Stateless Tool</i>")
+            style LLM fill:#5E35B1,stroke:#CFD8DC
+        end
     end
 
-    subgraph "Working Memory (Structured State)"
-        direction TB
-        C1["<b>Full Code State</b><br><font size=2>The entire codebase as a dictionary of file paths to content.</font>"];
-        C2["<b>High-Level Plan</b><br><font size=2>A structured list of tasks with statuses (pending, done, error).</font>"];
-        C3["<b>Execution Trace</b><br><font size=2>A log of actions taken and decisions made by the Orchestrator.</font>"];
-        C4["<b>Structured Critique</b><br><font size=2>A list of actionable issues (bugs, suggestions) in a machine-readable format.</font>"];
-        C5["<b>User's Goal</b><br><font size=2>The original, immutable user prompt.</font>"];
-    end
+    %% Connections
+    User_Input[(User Prompt)] --> Orchestrator
 
-    subgraph "Orchestrator (State Machine)"
-        direction TB
-        B --> D{Architect Persona};
-        D -- Updates Plan --> B;
-        B --> E{Coder Persona};
-        E -- Updates Code --> B;
-        B --> F{Reviewer Persona};
-        F -- Updates Critique --> B;
-        B --> G{Self-Correction Logic};
-        G -- Routes to --> D;
-        G -- Routes to --> E;
-        G -- Routes to --> H((<font color=#90EE90>FINALIZE</font>));
-    end
+    Orchestrator -- "Activates" --> Architect
+    Architect -- "Reads Goal & Critique" --> WM_Goal
+    Architect -- "Reads Goal & Critique" --> WM_Critique
+    Architect -- "LLM Call" --> LLM
+    LLM -- "Generates Plan" --> Architect
+    Architect -- "Updates" --> WM_Plan
 
-    subgraph "LLM as a Stateless Tool (Groq API)"
-        I((8B Parameter Model))
-    end
+    Orchestrator -- "Activates" --> Coder
+    Coder -- "Reads Plan & Code" --> WM_Plan
+    Coder -- "Reads Plan & Code" --> WM_Code
+    Coder -- "LLM Call" --> LLM
+    LLM -- "Generates Code" --> Coder
+    Coder -- "Updates" --> WM_Code
 
-    D -- "<font size=2>LLM Call: High-level reasoning</font>" --> I;
-    E -- "<font size=2>LLM Call: Focused code generation</font>" --> I;
-    F -- "<font size=2>LLM Call: Structured code analysis</font>" --> I;
+    Orchestrator -- "Activates" --> Reviewer
+    Reviewer -- "Reads Plan & Code" --> WM_Plan
+    Reviewer -- "Reads Plan & Code" --> WM_Code
+    Reviewer -- "LLM Call" --> LLM
+    LLM -- "Generates Critique" --> Reviewer
+    Reviewer -- "Updates" --> WM_Critique
 
-    style A fill:#475569,stroke:#94A3B8
-    style B fill:#059669,stroke:#34D399
-    style C fill:#475569,stroke:#94A3B8
-    style D fill:#D97706,stroke:#FBBF24
-    style E fill:#2563EB,stroke:#60A5FA
-    style F fill:#9333EA,stroke:#C084FC
-    style G fill:#DC2626,stroke:#F87171
-    style H fill:#166534,stroke:#4ADE80
-    style I fill:#475569,stroke:#94A3B8
+    Orchestrator -- "Activates" --> Corrector
+    Corrector -- "Reads Critique" --> WM_Critique
+    Corrector -- "Decides next action" --> Orchestrator
+
+    Final_Output[(Final Code)]
+    Orchestrator -- "Loop terminates" --> Final_Output
+
+    style User_Input fill:#4CAF50,stroke:#CFD8DC
+    style Final_Output fill:#4CAF50,stroke:#CFD8DC
+    style Architect fill:#0288D1,stroke:#CFD8DC
+    style Coder fill:#0288D1,stroke:#CFD8DC
+    style Reviewer fill:#0288D1,stroke:#CFD8DC
+    style Corrector fill:#C2185B,stroke:#CFD8DC
 ```
 
 ### The Working Memory: The System's Consciousness
