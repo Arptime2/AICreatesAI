@@ -1,89 +1,49 @@
-# AICAI - Architecture & Functionality Notes (V15 - Definitive)
+# AICAI - Architecture & Functionality Notes (V16 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive V15 architecture. This version faithfully implements the core, detailed principles of ASI-Arch, creating a plausible and scientifically-grounded system for autonomous, infinite improvement. It is built around a centralized, database-centric communication protocol and a composite fitness function.
+**Purpose:** To define the final, definitive V16 architecture. This version implements a Hierarchical, Multi-Cycle System for Autonomous Scientific Discovery, a more plausible and detailed model inspired by the operational layers of advanced research systems. This design is robust, detailed, and specifically structured to be effective with a constrained LLM.
 
 ---
 
-## 1. Core Philosophy: Autonomous, Collaborative Research via a Centralized Memory
+## 1. Core Philosophy: Hierarchical, Multi-Cycle Operation
 
-This architecture abandons all previous simplistic models. It implements a rigorous, multi-agent system where all communication and collaboration are mediated through a central, persistent database. This asynchronous, database-centric model is a direct implementation of the core design of successful research systems like ASI-Arch. The system's evolution is guided by a sophisticated, composite fitness function that balances objective performance with a qualitative assessment of innovation and elegance.
+This architecture abandons the simplistic, single-loop model in favor of a more realistic, hierarchical structure. The system operates on three distinct timescales, or cycles, each with a specific purpose. This separation of concerns allows for a more organized, plausible, and efficient approach to autonomous research, making it manageable for a small model.
 
----
-
-## 2. Architectural Deep Dive - V15
-
-### 2.1. The Central Nervous System: The MongoDB Research Database
-
-This is the heart of the system. It is a MongoDB database that serves as the single source of truth and the collective memory for all agents. It stores a collection of "Experiment" documents, each with a detailed schema:
-
-```json
-{
-  "_id": "...",
-  "experiment_id": "...",
-  "parent_experiment_id": "...", // For tracing lineage
-  "status": "(PENDING, RUNNING, COMPLETED, FAILED)",
-  "hypothesis": "...", // The specific hypothesis being tested
-  "champion_prompt_set": { ... },
-  "challenger_prompt_set": { ... },
-  "engineer_output": {
-    "code": "...",
-    "tests": "...",
-    "self_revision_trace": [ ... ]
-  },
-  "verification_results": {
-    "test_pass_rate": 0.95,
-    "linting_score": 8.5,
-    "efficiency_metrics": { ... }
-  },
-  "critic_assessment": {
-    "novelty_score": 7,
-    "elegance_score": 8,
-    "qualitative_report": "..."
-  },
-  "final_fitness_score": 8.85
-}
-```
-
-### 2.2. The Multi-Agent System
-
-The agents operate as independent, asynchronous workers that communicate only by reading from and writing to the Research Database.
-
-1.  **The `Director` Agent:**
-    -   **Role:** The system's project manager.
-    -   **Trigger:** Periodically scans the database for experiments with `status: COMPLETED`.
-    -   **Task:** To initiate the next cycle of research. It selects the highest-performing experiments and creates new `PENDING` experiment documents, tasking the `Researcher` agent with generating a new hypothesis based on the successful parent.
-
-2.  **The `Researcher` Agent:**
-    -   **Role:** The system's chief scientist.
-    -   **Trigger:** Scans the database for experiments with `status: PENDING` that are assigned to it.
-    -   **Task:** Reads the parent experiment's data. Consults the `Cognition Archive` (a separate knowledge base of research papers). Generates a new, specific hypothesis and a "Challenger" prompt set. It then updates the experiment document in the database with this new information and sets the `status` to `RUNNING`.
-
-3.  **The `Engineer` Agent:**
-    -   **Role:** The system's workhorse.
-    -   **Trigger:** Scans the database for experiments with `status: RUNNING`.
-    -   **Task:** Executes the `Code -> Test -> Self-Revise` cycle using the Challenger prompt set. Upon successful completion, it writes the final code, tests, and self-revision trace to the experiment document.
-
-4.  **The `Critic` Agent (LLM-as-Judge):**
-    -   **Role:** The system's arbiter of quality.
-    -   **Trigger:** Scans the database for experiments where the `engineer_output` is present but the `critic_assessment` is not.
-    -   **Task:** Performs a qualitative assessment of the generated code, scoring it for novelty and elegance. It writes its report and scores to the experiment document.
-
-5.  **The `Analyst` Agent:**
-    -   **Role:** The system's data analyst.
-    -   **Trigger:** Scans the database for experiments where the `critic_assessment` is present but the `final_fitness_score` is not.
-    -   **Task:** Calculates the final, composite fitness score based on a weighted formula of the objective verification results and the subjective critic assessment. It writes this final score to the experiment document and sets the `status` to `COMPLETED`.
-
-### 2.3. The Composite Fitness Function
-
-The `Analyst` agent uses a formula like this to calculate the final score:
-
-`Fitness = (w1 * Test_Pass_Rate) + (w2 * Linting_Score) + (w3 * Novelty_Score) + (w4 * Elegance_Score) - (w5 * Efficiency_Penalty)`
-
-This ensures that the system evolves towards solutions that are not just correct, but also innovative, elegant, and efficient.
+1.  **The Macro-Cycle (Strategic Research):** The slowest, highest level of thinking. It sets the broad research agenda.
+2.  **The Meso-Cycle (Experimental Design):** The middle layer, where a research direction is turned into a concrete, testable experiment.
+3.  **The Micro-Cycle (Engineering & Verification):** The fastest, lowest level of operation, where the experiment is executed and code is generated and tested.
 
 ---
 
-## 4. Visualization V12: The Definitive Autonomous Research System
+## 2. Architectural Deep Dive - V16
 
-I will now create the final, most detailed interactive visualization. It will clearly illustrate the central role of the Research Database, the asynchronous nature of the agents, and the complete, plausible research loop.
+### 2.1. The Macro-Cycle: The `Director` Agent
+
+-   **Role:** The system's strategic director.
+-   **Timescale:** Runs infrequently (e.g., once every N experiments).
+-   **Task:** To set the overall research direction. It analyzes the long-term trends from the `ExperimentDatabase` and consults the `CognitionArchive` to identify broad, promising areas for exploration. It does not design experiments itself; it writes a **Research Mandate**.
+-   **Example Research Mandate:** "The system has reached a plateau in improving code efficiency. The `CognitionArchive` contains several papers on asynchronous programming. *Mandate:* Initiate a series of experiments to determine if adopting an asynchronous, event-driven model can improve performance without sacrificing correctness."
+
+### 2.2. The Meso-Cycle: The `Researcher` & `Designer` Agents
+
+-   **Role:** The system's scientists.
+-   **Timescale:** Runs once per experiment.
+-   **Task:** To turn a `ResearchMandate` into a specific experiment.
+    1.  The **`Researcher` Agent** receives the mandate, consults the relevant papers in the `CognitionArchive`, and formulates a single, testable **Hypothesis**.
+    2.  The **`Designer` Agent** receives the hypothesis and designs the **Challenger Prompt Set** that will be used to test it.
+
+### 2.3. The Micro-Cycle: The `Engineer` Agent
+
+-   **Role:** The system's hands-on developer.
+-   **Timescale:** Runs continuously to execute the experiment.
+-   **Task:** To run the `Code -> Test -> Self-Revise` loop. This is the fast, inner loop that generates and debugs the code until it passes all functional tests.
+
+### 2.4. The `Critic` and `Analyst` Agents
+
+-   These agents remain as previously designed, providing the essential qualitative assessment and composite fitness scoring that guide the entire system.
+
+---
+
+## 3. Visualization V13: The Definitive Hierarchical Model
+
+I will now create the final, professional, and guaranteed-to-work interactive visualization. It will be a static SVG with manually embedded interactivity to ensure robustness and avoid all previous rendering errors. It will clearly illustrate the three distinct cycles of operation.

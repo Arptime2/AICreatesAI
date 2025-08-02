@@ -1,4 +1,4 @@
-/* V2 - Professional & Readable Stylesheet */
+/* V3 - Professional & Robust Stylesheet */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 :root {
@@ -16,7 +16,7 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 2rem;
-    font-size: 16px; /* Base font size */
+    font-size: 16px;
 }
 
 #container {
@@ -41,6 +41,11 @@ body {
     align-items: center;
 }
 
+#diagram-container svg {
+    width: 100%;
+    height: 100%;
+}
+
 #info-panel {
     overflow-y: auto;
 }
@@ -48,7 +53,7 @@ body {
 #info-panel h2 {
     margin-top: 0;
     color: var(--primary-color);
-    font-size: 1.5rem; /* Larger heading */
+    font-size: 1.5rem;
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
 }
@@ -60,20 +65,15 @@ body {
 
 #info-content p {
     line-height: 1.7;
-    font-size: 1rem; /* Ensure readable paragraph text */
+    font-size: 1rem;
 }
 
-/* Mermaid Diagram Specific Styles */
-.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .node ellipse {
-    stroke-width: 2px !important;
+/* SVG Specific Styles */
+.svg-node {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
 }
 
-.mermaid .cluster rect {
-    fill: #f8f9fa !important;
-    stroke: #adb5bd !important;
-    stroke-width: 2px !important;
-}
-
-.mermaid .edgeLabel {
-    font-size: 0.9rem !important;
+.svg-node:hover {
+    transform: scale(1.02);
 }

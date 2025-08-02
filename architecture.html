@@ -3,66 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V15 Architecture: Autonomous Research & Development System</title>
+    <title>AICAI V16 Architecture: Hierarchical, Multi-Cycle System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="container">
         <div id="diagram-container">
-            <div class="mermaid">
-            graph TD
-                subgraph "CENTRAL NERVOUS SYSTEM"
-                    direction TB
-                    style DB fill:#FFF3E0,stroke:#FF9800,stroke-width:4px
-                    DB[["<b>MongoDB Research Database</b><br>The single source of truth and<br>collective memory for all agents"]]
-                end
-
-                subgraph "ASYNCHRONOUS AGENT WORKERS"
-                    direction LR
-                    style Director fill:#E3F2FD,stroke:#2196F3
-                    style Researcher fill:#E3F2FD,stroke:#2196F3
-                    style Engineer fill:#E0F2F1,stroke:#009688
-                    style Critic fill:#FFF9C4,stroke:#FFEB3B
-                    style Analyst fill:#FCE4EC,stroke:#E91E63
-
-                    Director("<b>Director Agent</b><br>Initiates new research cycles")
-                    Researcher("<b>Researcher Agent</b><br>Generates hypotheses &<br>Challenger prompts")
-                    Engineer("<b>Engineer Agent</b><br>Builds, tests, and<br>self-revises code")
-                    Critic("<b>Critic Agent</b><br>Provides qualitative<br>assessment of novelty & elegance")
-                    Analyst("<b>Analyst Agent</b><br>Calculates the final<br>composite fitness score")
-                end
-
-                %% Data Flow
-                Director -- "1. Creates PENDING experiment" --> DB
-                DB -- "2. Provides PENDING experiment" --> Researcher
-                Researcher -- "3. Writes hypothesis & Challenger prompt" --> DB
-                DB -- "4. Provides RUNNING experiment" --> Engineer
-                Engineer -- "5. Writes code & test results" --> DB
-                DB -- "6. Provides experiment for assessment" --> Critic
-                Critic -- "7. Writes qualitative scores" --> DB
-                DB -- "8. Provides complete data for analysis" --> Analyst
-                Analyst -- "9. Writes final fitness score & COMPLETES experiment" --> DB
-
-                %% Final Output
-                VerifiedCode[["<b>High-Quality Code Artifact</b>"]]
-                style VerifiedCode fill:#DCE775,stroke:#8BC34A,stroke-width:3px
-                DB --> VerifiedCode
-
-                %% Interactivity Callbacks
-                click DB callback "DB"
-                click Director callback "Director"
-                click Researcher callback "Researcher"
-                click Engineer callback "Engineer"
-                click Critic callback "Critic"
-                click Analyst callback "Analyst"
-            </div>
+            <!-- Static SVG will be embedded here -->
         </div>
         <div id="info-panel">
             <h2>Click a component to see details.</h2>
             <div id="info-content"></div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
