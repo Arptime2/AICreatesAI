@@ -62,60 +62,79 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: A Lean Interpretation of ASI-Arch
+## Architecture: The Infinite Loop of Refinement
 
-The ASI-Arch project pioneers a powerful concept: a society of AI agents that collaborate to solve complex problems. We adapt this philosophy to a leaner, single-agent model that embodies different specialist roles through carefully crafted prompts. This allows a small 8B model to "wear different hats"—Architect, Coder, and Reviewer—to achieve a result far greater than the sum of its parts.
+Previous explanations were too linear. The true power of this tool, inspired by ASI-Arch, is not a simple pipeline but a **cyclical, self-correcting, and potentially infinite loop**. The goal is to create a system that doesn't just generate code, but iteratively improves it until it reaches a state of high quality and correctness. The process is designed to be interruptible by the user, but conceptually, it could run forever, constantly refining the code.
 
-Our architecture is not just a sequence of prompts; it's a stateful, recursive loop where the output of one phase serves as the structured input for the next. This is how we overcome the inherent context limitations of small models.
+This is achieved by a more sophisticated multi-persona approach, where each persona has a detailed set of responsibilities.
 
 ```mermaid
 graph TD
-    A[Start: User Prompt & Optional Code] --> B{Phase 1: The Architect};
-    B -- Plan --> C{Phase 2: The Coder};
-    C -- Generated Code --> D{Phase 3: The Reviewer};
-    D -- Refined Code --> E[Final Output];
+    A[Start: User Prompt & Code] --> B{1. The Architect};
+    B -- Creates/Refines --> C(High-Level Plan);
+    C --> D{2. The Coder};
+    D -- Implements --> E(Code Snippet);
+    E --> F{3. The Reviewer};
+    F -- Generates --> G(Critique & Suggestions);
+    G -- Feeds back to --> B;
 
-    subgraph "Orchestration Loop (recursive_improver.py)"
-        B -- LLM Call 1: Create Plan --> B;
-        C -- LLM Calls 2..N: Execute Plan Step-by-Step --> C;
-        D -- LLM Call N+1: Refine & Correct --> D;
+    subgraph "Core Improvement Loop"
+        direction LR
+        B -- LLM Call --> B;
+        D -- LLM Call --> D;
+        F -- LLM Call --> F;
     end
 
-    style A fill:#fff,stroke:#333,stroke-width:2px
-    style E fill:#fff,stroke:#333,stroke-width:2px
-    style B fill:#f2b04d,stroke:#333,stroke-width:2px
-    style C fill:#4da6f2,stroke:#333,stroke-width:2px
-    style D fill:#4df2a6,stroke:#333,stroke-width:2px
+    H(Final Code) -- User Interrupt --> A;
+    G -- No more suggestions --> H;
 
     linkStyle 0 stroke-width:2px,fill:none,stroke:black;
     linkStyle 1 stroke-width:2px,fill:none,stroke:black;
     linkStyle 2 stroke-width:2px,fill:none,stroke:black;
+    linkStyle 3 stroke-width:2px,fill:none,stroke:black;
+    linkStyle 4 stroke-width:2px,fill:none,stroke:black,stroke-dasharray: 5 5;
+    linkStyle 6 stroke-width:2px,fill:none,stroke:green;
+
+    style B fill:#f2b04d,stroke:#333,stroke-width:2px
+    style D fill:#4da6f2,stroke:#333,stroke-width:2px
+    style F fill:#4df2a6,stroke:#333,stroke-width:2px
 ```
 
-### The Three Phases of Recursive Improvement:
+### The Roles in Detail:
 
-1.  **Phase 1: The Architect (High-Level Planning)**
-    -   **Role**: The LLM is prompted to act as a systems architect.
-    -   **Input**: The user's raw request (e.g., "Build a Redis-backed caching layer for a Django app").
-    -   **Process**: The model produces a high-level, step-by-step plan. It does *not* write code. It only thinks about the structure, components, and sequence of actions.
-    -   **Output**: A structured plan (e.g., `["1. Install redis-py", "2. Configure Django settings", "3. Create a cache utility module"]`).
-    -   **Why It's Better**: By separating planning from coding, we ensure the overall structure is logical *before* a single line of code is written. This prevents the model from getting lost in implementation details and producing unstructured, monolithic scripts.
+#### 1. The Architect: The Master Planner
+-   **Core Task**: Maintain the high-level vision of the project.
+-   **Sub-Tasks**:
+    -   **Initial Planning**: On the first loop, create a comprehensive, step-by-step plan based on the user's prompt.
+    -   **Plan Refinement**: On subsequent loops, *re-evaluate the entire plan* based on the Reviewer's feedback. Does the plan need to be changed? Are there new steps to add? Should the order be modified?
+    -   **Decomposition**: Break down complex steps into smaller, more manageable sub-tasks for the Coder.
+-   **Prompt Focus**: "You are a 10x software architect. Your goal is to create and refine a robust, scalable, and maintainable plan. Critically analyze the current plan and the reviewer's feedback. Output a revised, numbered list of steps."
 
-2.  **Phase 2: The Coder (Focused Execution)**
-    -   **Role**: The LLM now acts as a junior developer receiving a specific ticket.
-    -   **Input**: The full plan (for context), the *current code state*, and **only one** specific step from the plan (e.g., "2. Configure Django settings").
-    -   **Process**: The `recursive_improver` loops through the plan. In each iteration, it feeds the model the current code and the next task. The model's output (the newly generated code) is immediately integrated, updating the code state for the next loop.
-    -   **Output**: A block of code that accomplishes one specific task.
-    -   **Why It's Better**: This is the core of our small-model optimization. The context window is never filled with the entire desired application. It contains only the immediately relevant code and a single, clear instruction. This mimics how a human developer focuses on one function at a time, preventing cognitive overload and ensuring high-quality, context-aware code for each part of the application.
+#### 2. The Coder: The Focused Implementer
+-   **Core Task**: Write code for a single, specific task.
+-   **Sub-Tasks**:
+    -   **Contextual Understanding**: Receive the full plan for context, but focus only on the *current* step provided by the Architect.
+    -   **Code Generation**: Write the most efficient, readable, and correct code to implement that single step.
+    -   **Integration**: Ensure the new code snippet correctly integrates with the existing code provided in the prompt.
+-   **Prompt Focus**: "You are a senior developer. Your task is to implement the following step from the plan. Here is the existing code. Write only the new code required for this step."
 
-3.  **Phase 3: The Reviewer (Quality Assurance)**
-    -   **Role**: The LLM transforms into a senior engineer performing a code review.
-    -   **Input**: The *complete* code generated during the Coder phase.
-    -   **Process**: The model is prompted to critically analyze the code for bugs, style violations, and potential improvements. It is explicitly told to act as a quality gate.
-    -   **Output**: The final, refined code, ready for the user.
-    -   **Why It's Better**: This self-correction step is crucial. The step-by-step generation in Phase 2 can sometimes lead to minor inconsistencies. The Reviewer phase smooths these out, adds docstrings, and catches subtle errors that a pure generation process might miss. It ensures the final product is not just functional, but robust and maintainable.
+#### 3. The Reviewer: The Quality Gate
+-   **Core Task**: Critically evaluate the code and provide actionable feedback.
+-   **Sub-Tasks**:
+    -   **Bug Detection**: Analyze the generated code for potential runtime errors, logical flaws, and edge cases.
+    -   **Best Practices**: Check for adherence to language-specific best practices, style guides (e.g., PEP 8), and design patterns.
+    -   **Suggestion Generation**: Produce a structured list of concrete, actionable suggestions. This is not just a critique; it's a set of instructions for the Architect. For example: `["ERROR: The database connection is not closed.", "SUGGESTION: Refactor the `process_data` function to be more modular."]`
+-   **Prompt Focus**: "You are a meticulous code reviewer and QA engineer. Analyze the following code. Identify all bugs, style issues, and areas for improvement. Provide your feedback as a list of actionable suggestions. If there are no issues, respond with 'None'"
 
-This architecture is more than just a prompt chain; it's a deliberate, stateful process that uses role-playing and recursion to elevate the capabilities of a small LLM to rival those of a much larger model, delivering on the promise of efficient, high-quality, AI-driven development.
+### The Infinite Loop in Practice:
+
+1.  The **Architect** creates a plan.
+2.  The **Coder** implements the plan, step by step.
+3.  The **Reviewer** analyzes the result.
+4.  **If the Reviewer provides suggestions**, the loop repeats. The **Architect** receives the suggestions and refines the plan. The **Coder** then re-implements the modified plan.
+5.  **If the Reviewer responds with "None"**, the system has reached a state of equilibrium. The code is considered complete and is presented to the user.
+
+This cyclical process of planning, coding, and reviewing allows the system to bootstrap itself from a simple prompt to a complex, high-quality application, all while using a small, efficient 8B model for each discrete step.
 
 
 ## Installation
