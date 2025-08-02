@@ -62,65 +62,58 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: Autonomous Quality via Self-Generated Testing
+## Architecture: Infinite Improvement via Genetic Prompt Optimization
 
-A system that cannot validate its own work is not truly autonomous. To achieve unbounded improvement, the system must be responsible for its own quality assurance. This architecture introduces a critical new component—the `Test Developer` persona—to create a self-contained, autonomous development and verification cycle.
+Reactive error correction is not sufficient for true, unbounded improvement. Inspired by the evolutionary mechanisms of advanced AI research and genetic algorithms, this project implements a **Genetic Prompt Optimizer**. This system treats its own operational prompts not as static text, but as **"digital DNA"** to be continuously evolved and improved. The system doesn't just learn from its mistakes; it proactively seeks more intelligent ways to think and work.
 
-The system now operates on a complete, end-to-end development workflow: `Plan -> Code -> Test -> Execute`.
+This is achieved through a continuous evolutionary cycle:
 
-```mermaid
-%%{init: {'theme': 'dark', 'fontFamily': 'Fira Code, monospace'}}%%
-graph LR
-    subgraph "STRATEGY & KNOWLEDGE"
-        direction TB
-        style Strategist fill:#C2185B,stroke:#FFF,stroke-width:2px
-        style KB fill:#673AB7,stroke:#FFF,stroke-width:2px
-        Strategist("<b>Strategist</b><br>Improves the entire process")
-        KB[("Persistent<br>Knowledge Base")]
-        Strategist --> KB
-    end
+```
+          +----------------------------------------------------+
+          |           GENETIC PROMPT OPTIMIZER                 |
+          | (The Engine of Infinite Improvement)               |
+          +----------------------------------------------------+
+                           ^                                |
+                           |                                |
+      (5. New Generation of Prompts)                        | (1. Generate Population)
+                           |                                |
+                           |                                v
++--------------------------------+      +-----------------------------------------+
+|    SELECTION & BREEDING        |      |      PROMPT POPULATION (The Gene Pool)    |
+| (Crossover & Mutation via LLM) |      |  (e.g., 10 variations of the Coder prompt) |
++--------------------------------+      +-----------------------------------------+
+             ^                                                |
+             |                                                | (2. Test each prompt)
+             |                                                |
+(4. Select the Fittest Prompts)                               |
+             |                                                v
++--------------------------------+      +-----------------------------------------+
+|         FITNESS SCORING        |      |        AUTONOMOUS DEVELOPMENT CYCLE       |
+|  (Success, Quality, Efficiency) |      |   (Plan -> Code -> Test -> Execute)     |
++--------------------------------+      +-----------------------------------------+
+             ^                                                |
+             |                                                |
+             +------------------------------------------------+
+                       (3. Performance Data)
 
-    subgraph "AUTONOMOUS DEVELOPMENT & VERIFICATION CYCLE"
-        direction LR
-        style Coder fill:#0288D1
-        style TestDev fill:#0097A7
-        style Executor fill:#00796B
-        
-        UserInput["User Goal"] --> Coder
-        Coder(<b>1. Coder</b><br>Writes Feature Code) -- Code --> TestDev
-        TestDev(<b>2. Test Developer</b><br>Writes Unit Tests) -- Tests --> Executor
-        Executor(<b>3. Executor</b><br>Runs Tests & Linters) -- "Pass / Fail<br>Stack Trace" --> Coder
-    end
-
-    %% Connections
-    KB -- Primes with Wisdom --> Coder
-    KB -- Primes with Wisdom --> TestDev
-
-    Executor -- "Execution Trace & Failures" --> Strategist
-    Executor --> FinalCode["Verified &<br>Tested Code"]
-
-    style UserInput fill:#4CAF50,stroke:#FFF,stroke-width:2px
-    style FinalCode fill:#4CAF50,stroke:#FFF,stroke-width:2px
 ```
 
-### The Autonomous Development Cycle
+### The Evolutionary Cycle: A Path to Unbounded Intelligence
 
-This is the core engine of the system, a tight loop that mirrors a complete, modern development workflow.
+1.  **Population Generation:** The system starts by creating a diverse "population" of prompt variations for each of its core personas (`Architect`, `Coder`, `Test Developer`).
 
-1.  **The Coder Persona:** As before, this persona writes the primary application code based on the user's goal and the system's accumulated knowledge.
+2.  **Fitness Evaluation:** Each individual prompt variation is put to the test in the **Autonomous Development Cycle**. It is used to perform a series of benchmark tasks, and its performance is measured.
 
-2.  **The Test Developer Persona (New):** This is the key to autonomy. Immediately after the `Coder` produces code, this new persona is activated. Its sole purpose is to write comprehensive unit tests for the code just created. It analyzes the feature code and the user's intent to generate meaningful tests that cover success cases, edge cases, and potential errors.
+3.  **Fitness Scoring:** A prompt's success is quantified with a **Fitness Score**, a formula that weighs key performance indicators:
+    -   **Task Success:** Did the resulting code pass the self-generated tests?
+    -   **Code Quality:** What is the score from static analysis tools?
+    -   **Efficiency:** How many resources (time, tokens) were consumed?
 
-3.  **The Executor:** This component takes both the feature code and the newly generated test code and runs them in a real execution environment. It executes the test suite (`pytest`, etc.) and captures the results.
+4.  **Selection & Breeding:** The highest-scoring prompts—the "fittest" individuals—are selected. The system then uses an LLM to perform genetic operations:
+    -   **Crossover:** Combining the "DNA" of two successful prompts to create a new hybrid.
+    -   **Mutation:** Introducing small, random changes to a successful prompt to explore new possibilities.
 
-### The Self-Correction and Learning Loop
-
-The feedback from this cycle is what drives improvement:
-
--   **Immediate Feedback:** If a test fails, the `Coder` receives the exact stack trace and error message. It is then tasked with fixing its own code to make the test pass. This is a tight, immediate, and powerful self-correction loop.
--   **Strategic Improvement:** The `Strategist` persona analyzes the entire cycle. It can now answer much deeper questions. Is the `Coder` writing untestable code? Is the `Test Developer` writing weak tests? The `Strategist` can then update the prompts for *both* personas, teaching them to be better developers and testers. This meta-learning is stored in the **Persistent Knowledge Base**, ensuring the system's capabilities grow over time.
-
-This architecture creates a system that is not just a code generator, but a complete, autonomous agent responsible for the quality of its own work. It is this self-contained cycle of creation and validation that provides a robust and practical path toward infinite improvement.
+5.  **New Generation:** This new generation of evolved prompts replaces the old one. The single best-performing prompt is used for live tasks while the evolutionary cycle continues in the background, constantly seeking the next breakthrough in performance. This is the engine of infinite improvement.
 
 
 ## Installation

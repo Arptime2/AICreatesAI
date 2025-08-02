@@ -1,99 +1,101 @@
-# AICAI - Architecture & Functionality Notes (V6)
+# AICAI - Architecture & Functionality Notes (V7)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** This version introduces a critical component for true autonomy: self-generated testing. The system now not only writes code but also writes the tests to validate it, creating a more robust and self-contained improvement cycle.
+**Purpose:** This document outlines a revolutionary new architecture (V7) that combines the principles of ASI-Arch with genetic algorithms for prompt engineering. This system is designed for true, proactive, and unbounded self-improvement by evolving its own "cognitive" processes.
 
 ---
 
-## 1. Core Philosophy: Autonomous Quality Assurance
+## 1. Core Philosophy: Evolving Intelligence
 
-The previous architectures were still dependent on a human to provide the initial test suite. This is a fundamental limitation. A truly autonomous, infinitely improving system must be responsible for its own quality assurance. It must generate its own hypotheses about correctness (the code) and then generate the experiments to falsify them (the tests).
+The user's request for "infinite improvement" and the insights from researching ASI-Arch and genetic prompt engineering necessitate a paradigm shift. Reactive error correction is not enough. The system must proactively seek better ways to perform its tasks, even when it is not failing. 
 
-**The New Core Cycle: `Plan -> Code -> Test -> Execute`**
+**The New Core Concept: The Genetic Prompt Optimizer**
 
-This represents a major leap in capability. The system now internalizes the complete development workflow.
-
----
-
-## 2. Architectural Deep Dive - V6
-
-### 2.1. The New `Test Developer` Persona
-
-This is a new, specialized LLM-based persona that is a peer to the `Coder`.
-
--   **Role:** An expert in software testing and quality assurance.
--   **Trigger:** Activated immediately after the `Coder` persona successfully generates a piece of code for a given task.
--   **Input:** The user's goal, the specific task from the plan, and the code produced by the `Coder`.
--   **Task:** "You are a senior test developer. Based on the provided goal and code, write a comprehensive unit test using the project's established testing framework (e.g., pytest). The test must cover the primary success case, edge cases, and potential error conditions. Only output the test code."
--   **Output:** A new function or file containing the unit test code.
-
-### 2.2. The Evolved Inner Loop: The Complete Development Cycle
-
-The Inner Loop is now a much more powerful engine.
-
-1.  **`Architect`:** Creates the plan.
-2.  **`Coder`:** Implements the code for a single task in the plan.
-3.  **`Test Developer`:** Writes a new test for the code just produced.
-4.  **`Executor`:** Runs the newly created test. The feedback (pass/fail, stack trace) is now richer because it directly corresponds to a test the system itself conceived.
-5.  **`Reviewer`:** Analyzes the code, the new test, and the execution result to provide a holistic critique.
-
-### 2.3. Impact on the Outer Loop (Knowledge Distillation)
-
-The `Strategist` persona now has access to a much richer data stream. It can analyze not just the code's failures but the entire generation and validation process.
-
--   **New Analysis Capabilities:**
-    -   **Poor Test Quality:** If the `Executor` reports that tests are passing but the final application still has bugs, the `Strategist` can infer that the `Test Developer` is writing poor-quality or insufficient tests. It can then update the `Test Developer`'s prompt to be more rigorous.
-    -   **Untestable Code:** If the `Test Developer` consistently struggles to write tests for the `Coder`'s output, the `Strategist` can infer that the `Coder` is writing untestable, tightly-coupled code. It can then update the `Coder`'s prompt to emphasize dependency injection, pure functions, and other principles of testable design.
-
-This allows the system to achieve a higher level of abstraction in its learning. It doesn't just learn to fix bugs; it learns to write clean, testable code and to be a more effective tester of that code.
+The heart of the V7 architecture is a new component that treats the system's prompts not as static text, but as **"digital DNA"** to be evolved. This component will run a genetic algorithm to constantly improve the prompts used by all other personas, leading to a system that doesn't just learn from its mistakes, but actively seeks to improve its own intelligence.
 
 ---
 
-## 3. Visualization V4: The Autonomous Quality Cycle
+## 2. Architectural Deep Dive - V7
 
-This new diagram is designed for maximum clarity and visual appeal. It uses a more dynamic, circular flow to represent the core loop and a vibrant color scheme. The fonts are clean and large.
+### 2.1. The Genetic Prompt Optimizer
 
-### New Mermaid Diagram Draft (V4)
+This is a new, high-level component that orchestrates the evolution of the system's prompts. It operates in a distinct "evolutionary cycle" that runs periodically.
 
-```mermaid
-%%{init: {'theme': 'dark', 'fontFamily': 'Fira Code, monospace'}}%%
-graph LR
-    subgraph "STRATEGY & KNOWLEDGE"
-        direction TB
-        style Strategist fill:#C2185B,stroke:#FFF,stroke-width:2px
-        style KB fill:#673AB7,stroke:#FFF,stroke-width:2px
-        Strategist("<b>Strategist</b><br>Improves the entire process")
-        KB[("Persistent<br>Knowledge Base")]
-        Strategist --> KB
-    end
+**The Evolutionary Cycle:**
 
-    subgraph "AUTONOMOUS DEVELOPMENT & VERIFICATION CYCLE"
-        direction LR
-        style Coder fill:#0288D1
-        style TestDev fill:#0097A7
-        style Executor fill:#00796B
-        
-        UserInput["User Goal"] --> Coder
-        Coder(<b>1. Coder</b><br>Writes Feature Code) -- Code --> TestDev
-        TestDev(<b>2. Test Developer</b><br>Writes Unit Tests) -- Tests --> Executor
-        Executor(<b>3. Executor</b><br>Runs Tests & Linters) -- "Pass / Fail<br>Stack Trace" --> Coder
-    end
+1.  **Population Generation:**
+    -   For each persona (`Architect`, `Coder`, `Test Developer`, `Reviewer`), the system will generate a diverse "population" of prompt variations. For example, it might generate 10 different versions of the `Coder` persona's prompt, each with slightly different wording, constraints, or examples.
 
-    %% Connections
-    KB -- Primes with Wisdom --> Coder
-    KB -- Primes with Wisdom --> TestDev
+2.  **Fitness Evaluation:**
+    -   Each prompt variation is tested in the real world by running a series of benchmark tasks.
+    -   A **Fitness Score** is calculated for each prompt based on a formula that measures:
+        -   **Success Rate:** Did the code produced by this prompt pass the tests?
+        -   **Code Quality:** A score from a static analysis tool (e.g., Ruff, SonarQube).
+        -   **Efficiency:** The time and resources used to complete the task.
+        -   **LLM Cost:** The number of tokens used.
 
-    Executor -- "Execution Trace & Failures" --> Strategist
-    Executor --> FinalCode["Verified &<br>Tested Code"]
+3.  **Selection:**
+    -   The highest-scoring prompt variations (the "fittest") are selected to be the "parents" for the next generation.
 
-    style UserInput fill:#4CAF50,stroke:#FFF,stroke-width:2px
-    style FinalCode fill:#4CAF50,stroke:#FFF,stroke-width:2px
+4.  **Crossover & Mutation:**
+    -   The system uses an LLM to perform "genetic operations" on the selected parent prompts:
+        -   **Crossover:** Combines elements of two high-performing prompts to create a new "child" prompt.
+        -   **Mutation:** Randomly alters a part of a high-performing prompt to introduce new, potentially beneficial variations.
+
+5.  **New Generation:**
+    -   The new generation of prompts (the children) replaces the old one, and the cycle repeats. The single best-performing prompt for each persona is used for the system's regular operations until the next evolutionary cycle.
+
+### 2.2. The Evolved Personas
+
+The existing personas (`Architect`, `Coder`, `Test Developer`, `Reviewer`) still exist, but they are now guided by the dynamically evolving prompts produced by the Genetic Prompt Optimizer.
+
+### 2.3. The `knowledge_base.md`
+
+The knowledge base is still crucial, but it now serves as a source of inspiration for the genetic algorithm. The `Prompt Optimizer` can use the rules in the knowledge base as a basis for mutations, ensuring that the system's learning is incorporated into the evolutionary process.
+
+---
+
+## 3. Visualization V5: The Evolutionary Cycle (ASCII Art)
+
+To address the persistent issues with visual clarity, I will now use a carefully crafted ASCII and Unicode box-drawing diagram. This ensures maximum readability and a clean, professional aesthetic.
+
+### New ASCII/Unicode Diagram Draft (V5)
+
 ```
 
-**V4 Diagram Improvements:**
--   **Clarity & Readability:** Large, bold text with a simple, clean layout.
--   **Dynamic Flow:** The left-to-right flow clearly shows the `Code -> Test -> Execute` sequence as the core engine.
--   **Vibrant Colors:** A distinct, high-contrast color is used for each major component, making the architecture easy to parse visually.
--   **Focus on Autonomy:** The diagram places the `Coder` and `Test Developer` in a tight, collaborative loop, emphasizing that the system is responsible for both creation and validation.
+          +----------------------------------------------------+
+          |           GENETIC PROMPT OPTIMIZER                 |
+          | (The Engine of Infinite Improvement)               |
+          +----------------------------------------------------+
+                           ^                                |
+                           |                                |
+      (5. New Generation of Prompts)                        | (1. Generate Population)
+                           |                                |
+                           |                                v
++--------------------------------+      +-----------------------------------------+
+|    SELECTION & BREEDING        |      |      PROMPT POPULATION (The Gene Pool)    |
+| (Crossover & Mutation via LLM) |      |  (e.g., 10 variations of the Coder prompt) |
++--------------------------------+      +-----------------------------------------+
+             ^                                                |
+             |                                                | (2. Test each prompt)
+             |                                                |
+(4. Select the Fittest Prompts)                               |
+             |                                                v
++--------------------------------+      +-----------------------------------------+
+|         FITNESS SCORING        |      |        AUTONOMOUS DEVELOPMENT CYCLE       |
+|  (Success, Quality, Efficiency) |      |   (Plan -> Code -> Test -> Execute)     |
++--------------------------------+      +-----------------------------------------+
+             ^                                                |
+             |                                                |
+             +------------------------------------------------+
+                       (3. Performance Data)
 
-This V6 architecture, with its autonomous testing capability, represents a significant step towards a system that can be trusted to improve itself safely and effectively.
+```
+
+**V5 Diagram Improvements:**
+
+-   **Maximum Readability:** Uses standard, large-font characters. No rendering issues.
+-   **Conceptual Clarity:** The diagram is a clear, circular flow that illustrates the evolutionary process. It's immediately obvious how the system improves itself.
+-   **Professional Aesthetic:** The clean, structured layout is more professional and easier to understand than the previous diagrams.
+
+This V7 architecture, with its Genetic Prompt Optimizer, represents a true implementation of the user's request for a system that can proactively and infinitely improve itself, inspired by the advanced concepts of ASI-Arch.
