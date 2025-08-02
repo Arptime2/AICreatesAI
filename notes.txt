@@ -16,81 +16,78 @@
 
 ---
 
-## 2. Detailed Architecture
+## 2. Detailed Architecture (V1 - Deprecated)
 
-The architecture is designed as a pipeline orchestrated by a central "improver" module. Each component has a single, clear responsibility.
-
-### 2.1. Component Breakdown
-
-**a) `main.py` - The CLI Interface & Orchestrator**
-- **Responsibility:** Parse user arguments, read initial files, invoke the core improvement loop, and handle the final output.
-- **Technology:** Python's `argparse` library.
-- **CLI Interface Definition:**
-  ```bash
-  python -m src.main --prompt "<user_request>" [--file <path_to_code>] [--output-file <path_to_save>] [--model <model_name>] [--verbose]
-  ```
-  - `--prompt` (required): The high-level user request (e.g., "create a fastapi endpoint").
-  - `--file` (optional): Path to an existing file. If provided, its content is used as the initial `current_code`.
-  - `--output-file` (optional): File to save the final, refined code. If omitted, print to `stdout`.
-  - `--model` (optional, default: `llama3-8b-8192`): Allows selecting a different Groq model.
-  - `--verbose` (optional, flag): If set, prints intermediate steps, plans, and LLM calls for debugging.
-
-**b) `recursive_improver.py` - The Core Logic**
-- **Responsibility:** Execute the Plan -> Decompose -> Execute -> Refine loop. This is the brain of the operation.
-- **Class: `RecursiveImprover`**
-  - `__init__(self, groq_client)`: Initializes with a `GroqClient` instance.
-  - `run(self, user_prompt, initial_code)`: The main entry point for the loop.
-- **Internal Flow:**
-  1.  **Phase 1: Planning.**
-      - Takes the `user_prompt`.
-      - Formats it using `prompts.PLANNING_PROMPT`.
-      - Sends it to the `GroqClient`.
-      - **Why it works:** This first call establishes a high-level strategy. The LLM is good at breaking down problems. The output is a structured list of steps (e.g., a newline-separated list).
-
-  2.  **Phase 2: Decomposition & Execution Loop.**
-      - Parses the plan from Phase 1 into a list of individual steps.
-      - Initializes a `current_code` variable with the `initial_code` from the input file.
-      - Iterates through each `step` in the plan:
-        - **Crucial Step:** It constructs a *highly specific* prompt for the LLM using `prompts.EXECUTION_PROMPT`.
-        - This prompt contains: `user_prompt`, the full `plan`, the *current* `step`, and the `current_code`.
-        - **Why it works (Context Window Efficiency):** This is the key to small model success. We are not asking the model to write the whole app. We are asking it to perform *one small task* (e.g., "add an import statement," "define the `__init__` method"). The context is small but dense with exactly what the model needs for that single task.
-        - The LLM's response (the generated code for that step) is appended to `current_code`.
-        - This updated `current_code` is then used in the prompt for the *next* step, creating a chain of context.
-
-  3.  **Phase 3: Refinement.**
-      - After the loop finishes, the complete `current_code` (the first draft) is passed to a final review step.
-      - It uses `prompts.REFINEMENT_PROMPT`.
-      - This prompt asks the LLM to act as a code reviewer: check for bugs, improve clarity, add comments, etc.
-      - **Why it works:** This leverages the LLM's pattern-recognition ability for a different purpose. It's no longer generating, but critiquing and improving. This final pass smooths out inconsistencies that might arise from the step-by-step generation process.
-
-**c) `groq_client.py` - The API Abstraction**
-- **Responsibility:** Handle all communication with the Groq API.
-- **Class: `GroqClient`**
-  - `__init__(self)`: Reads the `GROQ_API_KEY` from environment variables.
-  - `generate(self, prompt, model)`: Sends the prompt to the specified model and returns the text content of the response.
-- **Why it works:** This isolates the external dependency. If we ever wanted to switch to a different API, we would only need to change this file.
-
-**d) `file_handler.py` - Filesystem Interaction**
-- **Responsibility:** Safe reading and writing of files.
-- **Functions:** `read_file(path)`, `write_to_file(path, content)`.
-- **Why it works:** Prevents file I/O logic from cluttering the main application logic. Simple, testable, and reliable.
-
-**e) `prompts.py` - The Prompt Store**
-- **Responsibility:** Store all prompt templates in a single, easily editable location.
-- **Why it works:** This is a critical design choice for an LLM-based application. Prompt engineering is an iterative process. Separating prompts from Python code allows us to tweak the AI's behavior, instructions, and personality without touching the application's core logic.
+(Previous architecture notes are deprecated in favor of the V3 Deep Dive)
 
 ---
 
-## 3. Research & Justification for Efficiency
+## 3. Architectural Deep Dive - V3
 
-**The Core Problem with LLMs:** Large context windows are expensive and slow. Small models are fast but can't see the "big picture."
+**Research Synthesis:** My previous models were too simplistic. True autonomous systems require a clear separation of concerns between the controller (the orchestrator), the state (the memory), and the specialized functions (the personas). The architecture needs to be modeled as a **State Machine** governed by an **Orchestrator**, operating on a well-defined **Working Memory**. This is the key to enabling complex, emergent behavior from simple, stateless LLM calls.
 
-**Our Solution (The ASI-Arch Principle):** We give the small model a "scaffolding" for reasoning. The `RecursiveImprover` acts as the executive function, while the LLM acts as a specialized, stateless cognitive resource.
+### 3.1. The Working Memory (The System's State)
 
-- **How We Beat the Context Limit:** The decomposition loop is the answer. A 500-line application is too big for an 8K context. But a single function and a request to "add error handling to this function" is not. By breaking the problem down *before* calling the LLM, we ensure each call is small, targeted, and efficient.
+This is no longer an abstract concept. It will be implemented as a concrete Python dataclass. This provides structure and type safety.
 
-- **Why Groq is Essential:** The iterative nature of this tool (potentially dozens of LLM calls for a single user prompt) would be painfully slow on a traditional GPU-based inference service. Groq's LPU architecture provides near-instantaneous responses, making the recursive loop feel responsive and interactive rather than a slow, batch process.
+```python
+@dataclass
+class WorkingMemory:
+    user_goal: str
+    code_state: Dict[str, str]  # {filepath: content}
+    plan: List[Dict]  # e.g., {'id': 1, 'task': '...', 'status': 'pending'}
+    execution_trace: List[str]
+    critique: List[Dict] # e.g., {'type': 'BUG', 'details': '...'}
+    iteration: int
+```
 
-- **Statelessness by Design:** The tool itself is stateless. It doesn't remember past runs. All necessary context is either in the source files or provided in the prompt. This dramatically simplifies the architecture and prevents complex state management issues.
+-   **Why this structure?** It forces a rigorous, machine-readable representation of the system's state. The `plan` and `critique` are no longer freeform text but structured data. This allows the Orchestrator to make decisions based on data, not by parsing prose.
 
-This combination of architectural decomposition and high-speed inference allows a small, "dumber" model to collectively achieve a result that is competitive with a much larger, slower, and more expensive model.
+### 3.2. The Orchestrator (The State Machine)
+
+The `recursive_improver.py` will implement the Orchestrator. Its core is a `run()` method that acts as a state machine loop.
+
+**States:** `[PLANNING, CODING, REVIEWING, CORRECTING, FINALIZING]`
+
+1.  **`PLANNING` State:**
+    -   **Trigger:** First iteration, or when the `CORRECTING` state determines the plan is flawed.
+    -   **Action:** Calls the `Architect` persona.
+    -   **Input to LLM:** `working_memory.user_goal`, `working_memory.critique`.
+    -   **Output from LLM:** A JSON object representing the plan.
+    -   **State Update:** `working_memory.plan` is overwritten. `working_memory.critique` is cleared.
+    -   **Next State:** `CODING`.
+
+2.  **`CODING` State:**
+    -   **Trigger:** The `plan` has tasks with `status: 'pending'`.
+    -   **Action:** Loops through pending tasks and calls the `Coder` persona for each.
+    -   **Input to LLM:** `working_memory.code_state`, and a *single* task from `working_memory.plan`.
+    -   **Output from LLM:** A code snippet or modification (e.g., a diff).
+    -   **State Update:** The Orchestrator applies the change to `working_memory.code_state`. The task's status in `working_memory.plan` is updated to `'done'`.
+    -   **Next State:** `REVIEWING` (once a batch of coding tasks is complete).
+
+3.  **`REVIEWING` State:**
+    -   **Trigger:** After a `CODING` cycle.
+    -   **Action:** Calls the `Reviewer` persona.
+    -   **Input to LLM:** `working_memory.code_state`, `working_memory.plan`.
+    -   **Output from LLM:** A JSON array of critique objects.
+    -   **State Update:** `working_memory.critique` is populated with the output.
+    -   **Next State:** `CORRECTING`.
+
+4.  **`CORRECTING` State:**
+    -   **Trigger:** After a `REVIEWING` cycle.
+    -   **Action:** This is a pure logic step, no LLM call. It's the "decision maker."
+    -   **Logic:**
+        -   If `working_memory.critique` is empty, transition to `FINALIZING`.
+        -   If critique contains high-level issues (e.g., architectural flaws), transition to `PLANNING`.
+        -   If critique contains simple bugs, it modifies the `plan`, adding new tasks (e.g., `{'task': 'Fix bug in function X', 'status': 'pending'}`). Then transitions to `CODING`.
+    -   **Next State:** `PLANNING`, `CODING`, or `FINALIZING`.
+
+5.  **`FINALIZING` State:**
+    -   **Trigger:** The `CORRECTING` state finds no more issues.
+    -   **Action:** The loop terminates. The final code is presented to the user.
+
+### 3.3. Why This Architecture Excels with Small Models
+
+-   **Extreme Task Decomposition:** The LLM is never asked to do more than one, tiny thing at a time. The `Coder` implements one function. The `Architect` creates one plan. This keeps the context for each call minimal and highly relevant.
+-   **Structured I/O:** By forcing the LLM to read and write JSON, we remove ambiguity. The system is not parsing English prose to figure out what to do next. This makes the system more reliable and predictable.
+-   **Stateful Orchestrator, Stateless Model:** The intelligence and memory are in our Python code (the Orchestrator and Working Memory). The expensive, slow part (the LLM) is treated as a stateless function call—a tool that is picked up, used for a specific job, and put down. This is the most efficient way to use a service like Groq.
