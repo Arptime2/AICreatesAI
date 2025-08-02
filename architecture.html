@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V12 Architecture: Proactive Opportunity Seeking</title>
+    <title>AICAI V13 Architecture: Structured Scientific Discovery</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,50 +11,54 @@
         <div id="diagram-container">
             <div class="mermaid">
             graph TD
-                subgraph "META-COGNITIVE & INNOVATION ENGINE"
+                subgraph "SCIENTIFIC DISCOVERY ENGINE (The Brain)"
                     direction TB
-                    style MetaEngine fill:#E8EAF6,stroke:#3F51B5
-                    style Innovator fill:#E8EAF6,stroke:#3F51B5
-                    MetaEngine("<b>Meta-Cognitive Engine</b><br><i>Fixes failures</i>")
-                    Innovator("<b>Innovator Agent</b><br><i>Proactively seeks better solutions</i>")
+                    style Analyst fill:#E3F2FD,stroke:#2196F3
+                    style Designer fill:#E3F2FD,stroke:#2196F3
+                    Analyst("<b>Analyst Agent</b><br>Analyzes performance &<br>formulates a testable hypothesis")
+                    Designer("<b>Designer Agent</b><br>Designs the experiment<br>by creating a Challenger prompt")
+                    Analyst -- "Hypothesis" --> Designer
                 end
 
-                subgraph "COMPETITIVE A/B TESTING FRAMEWORK"
+                subgraph "ENGINEERING & VERIFICATION (The Hands)"
                     direction TB
-                    style ABTest fill:#FCE4EC,stroke:#E91E63
-                    ABTest("<b>A/B Testing & Promotion</b><br><i>Compares Champion vs. Challenger</i>")
+                    style Engineer fill:#E0F2F1,stroke:#009688
+                    Engineer("<b>Engineer Agent</b><br>Runs Code -> Test -> Execute cycle")
+                    
+                    subgraph "Self-Revision Loop"
+                        direction LR
+                        style Debugger fill:#FFEBEE,stroke:#F44336
+                        Debugger("<b>Self-Revision Mechanism</b><br>If test fails, agent is re-invoked<br>to debug its own code")
+                    end
+                    Engineer -- "On Failure" --> Debugger
                 end
 
-                subgraph "AUTONOMOUS TASK CYCLE"
-                    direction LR
-                    style TaskCycle fill:#E0F2F1,stroke:#009688
-                    TaskCycle("<b>Autonomous Task Cycle</b><br><i>Executes tasks with a given prompt set</i>")
-                end
-
-                subgraph "SYSTEM MEMORY"
+                subgraph "SYSTEM MEMORY & KNOWLEDGE"
                     direction TB
-                    style PromptDB fill:#FFF3E0,stroke:#FFB74D
-                    PromptDB[["<b>Prompt Database</b><br>Stores Champion & Challenger<br>prompt sets"]]
+                    style PromptDB fill:#FFF3E0,stroke:#FF9800
+                    style LogDB fill:#FFF3E0,stroke:#FF9800
+                    PromptDB[["<b>Prompt Database</b><br>Stores Champion & Challenger prompts"]]
+                    LogDB[["<b>Performance Log Database</b><br>Stores all empirical results"]]
                 end
 
                 %% Data Flow
-                MetaEngine -- "Writes Corrected Champion" --> PromptDB
-                Innovator -- "Writes New Challenger" --> PromptDB
-                PromptDB -- "Provides Prompt Set" --> TaskCycle
-                TaskCycle -- "Provides Performance Data" --> ABTest
-                ABTest -- "Promotes Winner" --> PromptDB
+                Designer -- "Writes Challenger Prompt" --> PromptDB
+                PromptDB -- "Provides Prompt Set" --> Engineer
+                Engineer -- "Writes Performance Data" --> LogDB
+                LogDB -- "Provides Data for Analysis" --> Analyst
 
                 %% Final Output
                 VerifiedCode[["<b>Verified Code Artifact</b>"]]
-                style VerifiedCode fill:#DCE775,stroke:#9CCC65,stroke-width:3px
-                TaskCycle --> VerifiedCode
+                style VerifiedCode fill:#DCE775,stroke:#8BC34A,stroke-width:3px
+                Engineer --> VerifiedCode
 
                 %% Interactivity Callbacks
-                click MetaEngine callback "MetaEngine"
-                click Innovator callback "Innovator"
-                click ABTest callback "ABTest"
-                click TaskCycle callback "TaskCycle"
+                click Analyst callback "Analyst"
+                click Designer callback "Designer"
+                click Engineer callback "Engineer"
+                click Debugger callback "Debugger"
                 click PromptDB callback "PromptDB"
+                click LogDB callback "LogDB"
             </div>
         </div>
         <div id="info-panel">

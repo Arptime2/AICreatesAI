@@ -1,52 +1,60 @@
-# AICAI - Architecture & Functionality Notes (V12 - Definitive)
+# AICAI - Architecture & Functionality Notes (V13 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive V12 architecture. This version transcends reactive error correction to create a system with a proactive, intrinsic drive for improvement, even in the absence of errors. This is achieved through the introduction of an `Innovator` agent and a competitive A/B testing framework.
+**Purpose:** To define the final, definitive V13 architecture. This version faithfully implements the core principles of ASI-Arch, creating a plausible, detailed, and scientifically-grounded system for autonomous, infinite improvement, specifically optimized for small models.
 
 ---
 
-## 1. Core Philosophy: Proactive Opportunity Seeking
+## 1. Core Philosophy: Structured Scientific Discovery
 
-The ultimate goal is a system that never settles for "good enough." It must actively seek opportunities for enhancement, even when its current output is correct. This requires a shift from a problem-solving mindset to an opportunity-seeking one. The V12 architecture achieves this by creating an internal environment of creative competition.
-
----
-
-## 2. Architectural Deep Dive - V12
-
-### 2.1. The `Innovator` Agent
-
-This is a new, high-level agent that acts as a creative catalyst.
-
--   **Role:** To challenge the current best approach (the "Champion" framework).
--   **Trigger:** Runs in a parallel, lower-priority process. It is activated when the system has successfully completed a task.
--   **Input:** The user's goal and the current Champion set of operational prompts.
--   **Task:** "You are an expert AI Systems Architect with a focus on innovation. The provided 'Champion' prompts represent the current best method for solving the user's goal. Your task is to generate a completely different, creative, and potentially superior 'Challenger' set of prompts. Your proposed approach should be fundamentally different in its strategy or methodology. Justify why your new approach could lead to a more efficient, elegant, or robust solution."
--   **Output:** A new "Challenger" set of operational prompts.
-
-### 2.2. The Competitive A/B Testing Framework
-
-This is the mechanism that drives the system's evolution.
-
--   **The Prompt Database:** Now stores at least two complete sets of operational prompts:
-    -   **The Champion:** The current, proven best set.
-    -   **The Challenger:** A new set proposed by the `Innovator` or the `MetaCognitiveEngine`.
--   **The A/B Test:** For a given task, the system will run the entire Autonomous Task Cycle twice, once with the Champion prompts and once with the Challenger prompts.
--   **The Fitness Function:** The outputs of both runs are compared using a sophisticated fitness function that scores:
-    -   **Correctness:** (Pass/Fail) - This is a prerequisite.
-    -   **Efficiency:** Token usage, execution time, computational resources.
-    -   **Elegance & Simplicity:** Code complexity metrics (e.g., cyclomatic complexity).
-    -   **Robustness:** The quality and coverage of the self-generated tests.
--   **Promotion:** If the Challenger's score is demonstrably higher than the Champion's, it is promoted to become the new Champion. The old Champion is archived.
-
-### 2.3. The Complete Improvement Loop
-
-1.  **Reactive Improvement:** If a task fails, the `MetaCognitiveEngine` is triggered to perform a root-cause analysis and fix the Champion prompts (as in V10).
-2.  **Proactive Improvement:** If a task succeeds, the `Innovator` agent is triggered to generate a Challenger set of prompts. This new set is then put through the A/B testing framework. 
-
-This dual system ensures that the AI is not only robust and self-correcting but also creative, ambitious, and relentlessly focused on finding a better way.
+This architecture abandons all previous high-level, vague concepts. It implements a rigorous, multi-agent system for scientific discovery, directly inspired by ASI-Arch. The system's core is a structured, scientific loop: **Analyze -> Hypothesize -> Design Experiment -> Execute & Self-Revise -> Promote**. This is not just about fixing errors; it's about systematically and proactively discovering superior methods.
 
 ---
 
-## 4. Visualization V9: The Definitive, Competitive Architecture
+## 2. Architectural Deep Dive - V13
 
-I will now update the interactive visualization to reflect this final, most powerful V12 architecture. The new diagram will clearly show the parallel `Innovator` agent and the competitive A/B testing loop.
+### 2.1. The Multi-Agent System
+
+The system is composed of three specialized, collaborating agents:
+
+1.  **The Analyst Agent:**
+    -   **Role:** The system's chief scientist. It analyzes the performance data from previous runs to identify areas for improvement.
+    -   **Input:** Structured performance logs (test results, efficiency metrics, code complexity).
+    -   **Task:** To formulate a single, specific, and testable **Hypothesis for Improvement**. 
+    -   **Example Hypothesis:** "The current prompt for the Code Generation Agent leads to code with high cyclomatic complexity. *Hypothesis:* Adding a specific instruction to prioritize functional decomposition and pure functions will reduce complexity without sacrificing correctness."
+    -   **Output:** A structured hypothesis object.
+
+2.  **The Designer Agent:**
+    -   **Role:** The system's experimental designer.
+    -   **Input:** The Analyst's hypothesis.
+    -   **Task:** To design the experiment that will test the hypothesis. It creates a "Challenger" prompt by modifying the current "Champion" prompt according to the Analyst's hypothesis.
+    -   **Output:** A new, complete "Challenger" prompt set.
+
+3.  **The Engineer Agent:**
+    -   **Role:** The system's workhorse and primary developer.
+    -   **Input:** A task, and a prompt set (either Champion or Challenger).
+    -   **Core Function:** It runs the standard `Code -> Test -> Execute` cycle.
+    -   **CRITICAL FEATURE - Self-Revision Mechanism:** If a test fails during execution, the Engineer Agent is **re-invoked** with the original code, the test suite, and the full error trace. Its new, temporary task is: "You are a debugging expert. Analyze the provided code and the failing test's error message. Your goal is to produce a patch that fixes the bug. Only output the lines of code that need to be changed." It will iteratively attempt to debug its own code until the tests pass.
+
+### 2.2. The Scientific Discovery Loop
+
+1.  **Baseline Execution:** The Engineer Agent completes a task using the current "Champion" prompt set. Performance data is logged.
+2.  **Analysis & Hypothesis:** The Analyst Agent examines the performance data and generates a specific hypothesis for improvement.
+3.  **Experimental Design:** The Designer Agent creates a "Challenger" prompt set based on the hypothesis.
+4.  **A/B Testing:** The Engineer Agent runs the same task again, this time using the "Challenger" prompt set.
+5.  **Promotion:** The performance of the Champion and Challenger are compared. If the Challenger is demonstrably superior, it is promoted to become the new Champion.
+6.  The loop repeats, constantly seeking the next incremental or breakthrough improvement.
+
+### 2.3. Optimization for Small Models
+
+This architecture is inherently optimized for small models:
+
+-   **Decomposition of Reasoning:** The complex problem of "improving the system" is broken down into smaller, highly-focused tasks (Analyze, Hypothesize, Design, Debug). A small model can excel at these well-defined sub-problems.
+-   **Structured I/O:** All communication between agents is done via structured data (JSON objects for hypotheses, performance logs, etc.), which is easier for a small model to parse and produce reliably.
+-   **Focused Self-Revision:** The self-revision task is tightly constrained. The model is not asked to rewrite the whole file, but to produce a specific patch for a specific error, which is a much more manageable task.
+
+---
+
+## 4. Visualization V10: The Definitive Scientific Discovery Loop
+
+I will now create the final, most detailed interactive visualization. It will clearly illustrate the new multi-agent structure, the scientific discovery loop, and the critical self-revision mechanism.

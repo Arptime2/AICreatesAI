@@ -5,25 +5,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialText = document.querySelector('#info-panel h2');
 
     const infoData = {
-        "MetaEngine": {
-            title: "Meta-Cognitive Engine (The Fixer)",
-            text: "This engine is the reactive part of the system. It is triggered *only when a task fails*. It performs a root-cause analysis of the failure and rewrites the current 'Champion' set of prompts to fix the identified flaw. Its goal is to ensure robustness and correctness."
+        "Analyst": {
+            title: "The Analyst Agent",
+            text: "The Analyst is the system's chief scientist. It does not write code or prompts directly. Instead, it pores over the empirical data in the Performance Log Database to identify statistically significant patterns of failure or inefficiency. Its sole output is a specific, testable hypothesis for improvement (e.g., \"Hypothesis: The current prompt's lack of explicit error handling instructions is correlated with a 15% failure rate in integration tests.\"). This grounds the entire improvement process in scientific rigor."
         },
-        "Innovator": {
-            title: "Innovator Agent (The Dreamer)",
-            text: "This agent is the proactive, creative heart of the system. It is triggered *only when a task succeeds*. Its sole purpose is to challenge the status quo. It takes the successful 'Champion' prompt set and is explicitly tasked with creating a fundamentally different 'Challenger' set. It is rewarded for creativity and for proposing novel approaches that could lead to a more elegant or efficient solution."
+        "Designer": {
+            title: "The Designer Agent",
+            text: "The Designer is the system's experimental designer. It receives the concrete, testable hypothesis from the Analyst and translates it into a new 'Challenger' prompt. It does this by applying the proposed change to the current 'Champion' prompt. This separation of concerns ensures that the hypothesis is tested in a controlled and precise manner."
         },
-        "ABTest": {
-            title: "Competitive A/B Testing Framework",
-            text: "This is the engine of evolution. When a new 'Challenger' prompt set is created by the Innovator, this framework runs the same task with both the 'Champion' and 'Challenger' sets. It then compares the results using a sophisticated fitness function (measuring correctness, efficiency, elegance, etc.). If the Challenger's performance is demonstrably superior, it is promoted to become the new Champion."
+        "Engineer": {
+            title: "The Engineer Agent",
+            text: "The Engineer is the workhorse of the system. It takes a prompt set (either the Champion or a Challenger) and executes the full development cycle: it interprets the prompt to write code, writes corresponding unit tests, and runs them. Its primary goal is to produce a working, tested code artifact."
         },
-        "TaskCycle": {
-            title: "Autonomous Task Cycle",
-            text: "The workhorse of the system. It executes a given development task using a specific set of prompts (either the Champion or a Challenger) provided by the Prompt Database. It is responsible for the entire Plan -> Code -> Test -> Execute workflow."
+        "Debugger": {
+            title: "The Self-Revision Mechanism",
+            text: "This is the most critical feature of the Engineer Agent and is directly inspired by ASI-Arch. If a test fails, the Engineer is re-invoked in a special 'debug mode'. It is given the code, the failing test, and the full error trace. Its new, tightly-scoped task is to analyze the error and produce a patch to fix the bug. This allows the system to overcome simple implementation errors without discarding a potentially valuable underlying idea."
         },
         "PromptDB": {
-            title: "Prompt Database",
-            text: "This database stores the complete sets of operational prompts. It always contains the current 'Champion' set. When the Innovator is active, it also contains one or more 'Challenger' sets that are candidates for promotion."
+            title: "The Prompt Database",
+            text: "This database stores the full, structured prompts for all agents. It always contains the current 'Champion' prompt set (the best-performing one) and, during an experiment, one or more 'Challenger' sets. This allows for the rigorous A/B testing that drives the system's evolution."
+        },
+        "LogDB": {
+            title: "The Performance Log Database",
+            text: "This database is the system's source of ground truth. It stores the detailed, empirical results of every test run, including pass/fail rates, code complexity metrics, efficiency data (e.g., token usage), and error traces. This rich, structured data is the essential fuel for the Analyst Agent's scientific discovery process."
         }
     };
 
