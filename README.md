@@ -62,18 +62,18 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: View the Definitive V13 Architecture
+## Architecture: View the Definitive V14 Architecture
 
-To provide the required level of detail, scientific formalism, and visual clarity, the project's architecture is now maintained in a standalone, interactive web application. This definitive V13 architecture faithfully implements the core principles of ASI-Arch, creating a plausible and detailed system for autonomous, infinite improvement.
+To provide the required level of detail, scientific formalism, and visual clarity, the project's architecture is now maintained in a standalone, interactive web application. This definitive V14 architecture faithfully implements the core principles of ASI-Arch, creating a plausible and detailed system for autonomous, infinite improvement.
 
 This new visualization is:
--   **Definitive & Detailed:** It illustrates the final V13 architecture, centered on the principle of **Structured Scientific Discovery**. It clearly shows the multi-agent structure (Analyst, Designer, Engineer) and the critical **Self-Revision Mechanism** that allows the system to debug its own code.
--   **Interactive & Explanatory:** Click on any component in the diagram to receive a detailed explanation of its role in the scientific discovery loop.
+-   **Definitive & Detailed:** It illustrates the final V14 architecture, centered on the principle of **Autonomous Research & Development**. It clearly shows the `Cognition Archive` that fuels innovation, the `Researcher` and `Critic` agents that drive the scientific discovery process, and the robust `Engineer` with its self-revision capabilities.
+-   **Interactive & Explanatory:** Click on any component in the diagram to receive a detailed explanation of its role in the research and development loop.
 -   **Professionally Designed:** It uses a clean, modern, and professional aesthetic for maximum readability and visual appeal.
 
-**[Click here to explore the interactive V13 architecture diagram](./architecture.html)**
+**[Click here to explore the interactive V14 architecture diagram](./architecture.html)**
 
-This interactive diagram is the definitive representation of the AICAI project's architecture and its scientifically-grounded path to achieving unbounded improvement.
+This interactive diagram is the definitive representation of the AICAI project's architecture and its scientifically-grounded path to achieving unbounded creativity and improvement.
 
 
 ## Installation

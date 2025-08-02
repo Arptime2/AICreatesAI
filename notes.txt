@@ -1,60 +1,53 @@
-# AICAI - Architecture & Functionality Notes (V13 - Definitive)
+# AICAI - Architecture & Functionality Notes (V14 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive V13 architecture. This version faithfully implements the core principles of ASI-Arch, creating a plausible, detailed, and scientifically-grounded system for autonomous, infinite improvement, specifically optimized for small models.
+**Purpose:** To define the final, definitive V14 architecture. This version faithfully implements the core principles of ASI-Arch, creating a plausible, detailed, and scientifically-grounded system for autonomous, infinite improvement. It introduces a `Cognition Archive` for external knowledge and a `Critic` agent for qualitative assessment.
 
 ---
 
-## 1. Core Philosophy: Structured Scientific Discovery
+## 1. Core Philosophy: Autonomous Research & Development
 
-This architecture abandons all previous high-level, vague concepts. It implements a rigorous, multi-agent system for scientific discovery, directly inspired by ASI-Arch. The system's core is a structured, scientific loop: **Analyze -> Hypothesize -> Design Experiment -> Execute & Self-Revise -> Promote**. This is not just about fixing errors; it's about systematically and proactively discovering superior methods.
+This architecture transcends simple problem-solving. It is a complete, autonomous R&D system. It doesn't just improve code; it performs research, synthesizes knowledge, and makes qualitative judgments to foster genuine innovation. This is achieved by faithfully implementing the multi-agent structure and knowledge-driven methodology of ASI-Arch.
 
 ---
 
-## 2. Architectural Deep Dive - V13
+## 2. Architectural Deep Dive - V14
 
-### 2.1. The Multi-Agent System
+### 2.1. The `Cognition Archive`
 
-The system is composed of three specialized, collaborating agents:
+This is the system's library, its connection to the vast body of human knowledge. It is a curated database (e.g., a vector database) containing research papers, articles, and documentation on software engineering, algorithms, and design patterns. This is the fuel for the `Researcher` agent and the foundation for the `Critic` agent's judgments.
 
-1.  **The Analyst Agent:**
-    -   **Role:** The system's chief scientist. It analyzes the performance data from previous runs to identify areas for improvement.
-    -   **Input:** Structured performance logs (test results, efficiency metrics, code complexity).
-    -   **Task:** To formulate a single, specific, and testable **Hypothesis for Improvement**. 
-    -   **Example Hypothesis:** "The current prompt for the Code Generation Agent leads to code with high cyclomatic complexity. *Hypothesis:* Adding a specific instruction to prioritize functional decomposition and pure functions will reduce complexity without sacrificing correctness."
-    -   **Output:** A structured hypothesis object.
+### 2.2. The Multi-Agent System for Scientific Discovery
 
-2.  **The Designer Agent:**
-    -   **Role:** The system's experimental designer.
-    -   **Input:** The Analyst's hypothesis.
-    -   **Task:** To design the experiment that will test the hypothesis. It creates a "Challenger" prompt by modifying the current "Champion" prompt according to the Analyst's hypothesis.
-    -   **Output:** A new, complete "Challenger" prompt set.
+1.  **The `Researcher` Agent:**
+    -   **Role:** The system's chief scientist and innovator.
+    -   **Input:** The user's high-level goal, the system's past experimental results, and, most importantly, relevant documents retrieved from the `Cognition Archive`.
+    -   **Task:** To synthesize this information and generate a high-level **Research Direction**. This is not just a small tweak; it is a proposal for a new, potentially superior, strategic approach.
+    -   **Example Research Direction:** "The `Cognition Archive` contains several papers on the benefits of functional programming for testability. The system's past results show a high rate of untestable code. *Hypothesis:* A new prompt architecture that explicitly instructs the Engineer to use functional decomposition and pure functions will lead to a significant improvement in testability and a reduction in bugs."
+    -   **Output:** A structured research proposal, including the hypothesis and a draft of a "Challenger" prompt set.
 
-3.  **The Engineer Agent:**
-    -   **Role:** The system's workhorse and primary developer.
-    -   **Input:** A task, and a prompt set (either Champion or Challenger).
+2.  **The `Engineer` Agent:**
+    -   **Role:** The system's workhorse, responsible for turning research into reality.
+    -   **Input:** A task and a prompt set (either the current "Champion" or a "Challenger").
     -   **Core Function:** It runs the standard `Code -> Test -> Execute` cycle.
-    -   **CRITICAL FEATURE - Self-Revision Mechanism:** If a test fails during execution, the Engineer Agent is **re-invoked** with the original code, the test suite, and the full error trace. Its new, temporary task is: "You are a debugging expert. Analyze the provided code and the failing test's error message. Your goal is to produce a patch that fixes the bug. Only output the lines of code that need to be changed." It will iteratively attempt to debug its own code until the tests pass.
+    -   **Self-Revision Mechanism:** If a test fails, the Engineer is re-invoked with the code and the error, and is explicitly tasked with debugging and patching its own code.
 
-### 2.2. The Scientific Discovery Loop
+3.  **The `Critic` Agent (LLM-as-Judge):**
+    -   **Role:** The system's arbiter of quality and elegance.
+    -   **Input:** A functionally correct code artifact that has passed all tests.
+    -   **Task:** To perform a qualitative assessment. It is prompted with the principles of good software design from the `Cognition Archive` (e.g., "SOLID principles," "Don't Repeat Yourself") and is asked to score the code on criteria like **elegance, simplicity, maintainability, and novelty**.
+    -   **Output:** A qualitative score and a structured report detailing its reasoning.
 
-1.  **Baseline Execution:** The Engineer Agent completes a task using the current "Champion" prompt set. Performance data is logged.
-2.  **Analysis & Hypothesis:** The Analyst Agent examines the performance data and generates a specific hypothesis for improvement.
-3.  **Experimental Design:** The Designer Agent creates a "Challenger" prompt set based on the hypothesis.
-4.  **A/B Testing:** The Engineer Agent runs the same task again, this time using the "Challenger" prompt set.
-5.  **Promotion:** The performance of the Champion and Challenger are compared. If the Challenger is demonstrably superior, it is promoted to become the new Champion.
-6.  The loop repeats, constantly seeking the next incremental or breakthrough improvement.
+### 2.3. The Complete Research & Development Loop
 
-### 2.3. Optimization for Small Models
-
-This architecture is inherently optimized for small models:
-
--   **Decomposition of Reasoning:** The complex problem of "improving the system" is broken down into smaller, highly-focused tasks (Analyze, Hypothesize, Design, Debug). A small model can excel at these well-defined sub-problems.
--   **Structured I/O:** All communication between agents is done via structured data (JSON objects for hypotheses, performance logs, etc.), which is easier for a small model to parse and produce reliably.
--   **Focused Self-Revision:** The self-revision task is tightly constrained. The model is not asked to rewrite the whole file, but to produce a specific patch for a specific error, which is a much more manageable task.
+1.  **Research:** The `Researcher` agent consults the `Cognition Archive` and past results to propose a new `Challenger` prompt set.
+2.  **Experimentation:** The `Engineer` agent runs the task with both the `Champion` and `Challenger` prompts.
+3.  **Verification:** The `Engineer`'s self-revision mechanism ensures both outputs are functionally correct.
+4.  **Qualitative Assessment:** The `Critic` agent evaluates both correct solutions for their architectural quality.
+5.  **Promotion:** A new Champion is chosen based on a fitness function that weighs both **objective performance** (efficiency, test coverage) and **qualitative score** (elegance, novelty). This is the key to avoiding local optima and rewarding true innovation.
 
 ---
 
-## 4. Visualization V10: The Definitive Scientific Discovery Loop
+## 4. Visualization V11: The Definitive R&D Loop
 
-I will now create the final, most detailed interactive visualization. It will clearly illustrate the new multi-agent structure, the scientific discovery loop, and the critical self-revision mechanism.
+I will now create the final, most detailed interactive visualization. It will clearly illustrate the `Cognition Archive`, the new `Researcher` and `Critic` agents, and the complete, plausible research loop that fosters genuine creativity.

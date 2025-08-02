@@ -5,29 +5,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialText = document.querySelector('#info-panel h2');
 
     const infoData = {
-        "Analyst": {
-            title: "The Analyst Agent",
-            text: "The Analyst is the system's chief scientist. It does not write code or prompts directly. Instead, it pores over the empirical data in the Performance Log Database to identify statistically significant patterns of failure or inefficiency. Its sole output is a specific, testable hypothesis for improvement (e.g., \"Hypothesis: The current prompt's lack of explicit error handling instructions is correlated with a 15% failure rate in integration tests.\"). This grounds the entire improvement process in scientific rigor."
+        "CognitionArchive": {
+            title: "The Cognition Archive",
+            text: "This is the system's library and its connection to the vast body of human knowledge. It is a curated vector database containing seminal research papers, articles, and documentation on software design patterns, algorithms, and architectural best practices. It provides the external, grounding knowledge required for genuine, non-hallucinatory innovation."
         },
-        "Designer": {
-            title: "The Designer Agent",
-            text: "The Designer is the system's experimental designer. It receives the concrete, testable hypothesis from the Analyst and translates it into a new 'Challenger' prompt. It does this by applying the proposed change to the current 'Champion' prompt. This separation of concerns ensures that the hypothesis is tested in a controlled and precise manner."
+        "Researcher": {
+            title: "The Researcher Agent",
+            text: "The Researcher is the system's chief scientist. It consults the Cognition Archive and the system's own past experimental results to formulate high-level, creative Research Directions. It does not just propose small tweaks; it proposes new strategic approaches inspired by established computer science principles. Its goal is to generate a plausible hypothesis for a superior 'Challenger' prompt set."
         },
         "Engineer": {
             title: "The Engineer Agent",
-            text: "The Engineer is the workhorse of the system. It takes a prompt set (either the Champion or a Challenger) and executes the full development cycle: it interprets the prompt to write code, writes corresponding unit tests, and runs them. Its primary goal is to produce a working, tested code artifact."
+            text: "The Engineer is the robust workhorse of the system. It takes a prompt set (either the Champion or a Challenger) and executes the full development cycle: it writes code, writes corresponding unit tests, and runs them. It includes a critical self-revision mechanism that allows it to debug its own code when a test fails, ensuring that good ideas are not discarded due to simple implementation errors."
         },
-        "Debugger": {
-            title: "The Self-Revision Mechanism",
-            text: "This is the most critical feature of the Engineer Agent and is directly inspired by ASI-Arch. If a test fails, the Engineer is re-invoked in a special 'debug mode'. It is given the code, the failing test, and the full error trace. Its new, tightly-scoped task is to analyze the error and produce a patch to fix the bug. This allows the system to overcome simple implementation errors without discarding a potentially valuable underlying idea."
+        "Critic": {
+            title: "The Critic Agent (LLM-as-Judge)",
+            text: "The Critic is the key to escaping local optima and rewarding true quality. After a solution has been proven functionally correct by the Engineer, the Critic performs a qualitative assessment. It is prompted with architectural principles from the Cognition Archive and scores the solution on non-functional, qualitative metrics like elegance, maintainability, simplicity, and novelty. A correct but clumsy solution will be scored poorly, preventing the system from settling for mediocrity."
         },
         "PromptDB": {
             title: "The Prompt Database",
-            text: "This database stores the full, structured prompts for all agents. It always contains the current 'Champion' prompt set (the best-performing one) and, during an experiment, one or more 'Challenger' sets. This allows for the rigorous A/B testing that drives the system's evolution."
-        },
-        "LogDB": {
-            title: "The Performance Log Database",
-            text: "This database is the system's source of ground truth. It stores the detailed, empirical results of every test run, including pass/fail rates, code complexity metrics, efficiency data (e.g., token usage), and error traces. This rich, structured data is the essential fuel for the Analyst Agent's scientific discovery process."
+            text: "This database stores the full, structured prompts for all agents. It always contains the current 'Champion' prompt set (the best-performing one) and, during an experiment, one or more 'Challenger' sets. The final promotion to Champion is decided by a fitness function that weighs both the Engineer's objective performance data and the Critic's qualitative score."
         }
     };
 

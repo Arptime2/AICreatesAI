@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V13 Architecture: Structured Scientific Discovery</title>
+    <title>AICAI V14 Architecture: Autonomous Research & Development</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,54 +11,51 @@
         <div id="diagram-container">
             <div class="mermaid">
             graph TD
-                subgraph "SCIENTIFIC DISCOVERY ENGINE (The Brain)"
+                subgraph "KNOWLEDGE & RESEARCH"
                     direction TB
-                    style Analyst fill:#E3F2FD,stroke:#2196F3
-                    style Designer fill:#E3F2FD,stroke:#2196F3
-                    Analyst("<b>Analyst Agent</b><br>Analyzes performance &<br>formulates a testable hypothesis")
-                    Designer("<b>Designer Agent</b><br>Designs the experiment<br>by creating a Challenger prompt")
-                    Analyst -- "Hypothesis" --> Designer
+                    style CognitionArchive fill:#F3E5F5,stroke:#9C27B0
+                    style Researcher fill:#E1BEE7,stroke:#9C27B0
+                    CognitionArchive[["<b>Cognition Archive</b><br>Curated database of<br>papers & best practices"]]
+                    Researcher("<b>Researcher Agent</b><br>Synthesizes knowledge to<br>propose new research directions")
+                    CognitionArchive --> Researcher
                 end
 
-                subgraph "ENGINEERING & VERIFICATION (The Hands)"
+                subgraph "ENGINEERING & VERIFICATION"
                     direction TB
                     style Engineer fill:#E0F2F1,stroke:#009688
-                    Engineer("<b>Engineer Agent</b><br>Runs Code -> Test -> Execute cycle")
-                    
-                    subgraph "Self-Revision Loop"
-                        direction LR
-                        style Debugger fill:#FFEBEE,stroke:#F44336
-                        Debugger("<b>Self-Revision Mechanism</b><br>If test fails, agent is re-invoked<br>to debug its own code")
-                    end
-                    Engineer -- "On Failure" --> Debugger
+                    Engineer("<b>Engineer Agent</b><br>Builds, tests, and self-revises code")
                 end
 
-                subgraph "SYSTEM MEMORY & KNOWLEDGE"
+                subgraph "QUALITATIVE ASSESSMENT"
                     direction TB
-                    style PromptDB fill:#FFF3E0,stroke:#FF9800
-                    style LogDB fill:#FFF3E0,stroke:#FF9800
+                    style Critic fill:#FFF9C4,stroke:#FFEB3B
+                    Critic("<b>Critic Agent (LLM-as-Judge)</b><br>Scores code for elegance, novelty,<br>and architectural quality")
+                end
+
+                subgraph "SYSTEM MEMORY"
+                    direction TB
+                    style PromptDB fill:#FFE0B2,stroke:#FF9800
                     PromptDB[["<b>Prompt Database</b><br>Stores Champion & Challenger prompts"]]
-                    LogDB[["<b>Performance Log Database</b><br>Stores all empirical results"]]
                 end
 
                 %% Data Flow
-                Designer -- "Writes Challenger Prompt" --> PromptDB
+                Researcher -- "Writes Challenger Prompt" --> PromptDB
                 PromptDB -- "Provides Prompt Set" --> Engineer
-                Engineer -- "Writes Performance Data" --> LogDB
-                LogDB -- "Provides Data for Analysis" --> Analyst
+                Engineer -- "Functionally Correct Code" --> Critic
+                Critic -- "Qualitative Score" --> Researcher
+                Engineer -- "Performance Data" --> Researcher
 
                 %% Final Output
-                VerifiedCode[["<b>Verified Code Artifact</b>"]]
+                VerifiedCode[["<b>High-Quality Code Artifact</b>"]]
                 style VerifiedCode fill:#DCE775,stroke:#8BC34A,stroke-width:3px
-                Engineer --> VerifiedCode
+                Critic --> VerifiedCode
 
                 %% Interactivity Callbacks
-                click Analyst callback "Analyst"
-                click Designer callback "Designer"
+                click CognitionArchive callback "CognitionArchive"
+                click Researcher callback "Researcher"
                 click Engineer callback "Engineer"
-                click Debugger callback "Debugger"
+                click Critic callback "Critic"
                 click PromptDB callback "PromptDB"
-                click LogDB callback "LogDB"
             </div>
         </div>
         <div id="info-panel">
