@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V8 Architecture</title>
+    <title>AICAI V9 Architecture - Efficient Evolutionary Prompt Engineering</title>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            color: #E0E0E0;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            background-color: #F5F5F5;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,70 +17,67 @@
         }
         .container {
             width: 95%;
-            max-width: 1600px;
-        }
-        .mermaid {
-            font-size: 16px; /* Base font size for the diagram */
+            max-width: 1800px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="mermaid">
-            graph TD
-                subgraph "OUTER LOOP: GENETIC PROMPT OPTIMIZATION (Slow, Strategic)"
-                    direction TB
-                    style GPO fill:#5E35B1,stroke:#D1C4E9,stroke-width:2px
-                    GPO("<b>Genetic Prompt Optimizer</b><br><i>The Engine of Infinite Improvement</i>")
+        graph TD
+            subgraph "EVOLUTIONARY ENGINE (Outer Loop)"
+                direction TB
+                style EvoEngine fill:#E3F2FD,stroke:#90CAF9
+                EvoEngine("<b>Evolutionary Engine</b><br><i>Optimizes Prompt Genomes</i>")
 
-                    subgraph "Evolutionary Operators"
-                        direction LR
-                        style Selection fill:#7E57C2,stroke:#D1C4E9
-                        style Crossover fill:#7E57C2,stroke:#D1C4E9
-                        style Mutation fill:#7E57C2,stroke:#D1C4E9
-                        Selection("<b>Selection</b><br>Chooses the fittest prompts")
-                        Crossover("<b>Crossover</b><br>Breeds new prompts")
-                        Mutation("<b>Mutation</b><br>Introduces new variations")
-                    end
-
-                    GPO --> Selection --> Crossover --> Mutation
-                end
-
-                subgraph "INNER LOOP: AUTONOMOUS DEVELOPMENT (Fast, Tactical)"
+                subgraph "Genetic Operators"
                     direction LR
-                    style Coder fill:#039BE5,stroke:#B3E5FC
-                    style TestDev fill:#00ACC1,stroke:#B2EBF2
-                    style Executor fill:#00897B,stroke:#B2DFDB
-
-                    Coder("<b>1. Coder Persona</b><br>Writes feature code")
-                    TestDev("<b>2. Test Developer</b><br>Writes unit tests")
-                    Executor("<b>3. Executor</b><br>Runs tests & linters")
-
-                    Coder -- "Feature Code" --> TestDev
-                    TestDev -- "Test Code" --> Executor
-                    Executor -- "Pass/Fail Feedback" --> Coder
+                    style Selection fill:#BBDEFB,stroke:#90CAF9
+                    style Recombination fill:#BBDEFB,stroke:#90CAF9
+                    style Mutation fill:#BBDEFB,stroke:#90CAF9
+                    Selection("<b>Selection Operator</b><br>Selects fittest genomes")
+                    Recombination("<b>Recombination (Crossover)</b><br>Combines genome parameters")
+                    Mutation("<b>Mutation Operator</b><br>Innovates by altering parameters")
                 end
 
-                subgraph "MEMORY & KNOWLEDGE"
-                    direction TB
-                    style Population fill:#F57C00,stroke:#FFE0B2
-                    style KnowledgeBase fill:#F57C00,stroke:#FFE0B2
-                    Population[["<b>Prompt Population Database</b><br>The gene pool of all prompt candidates<br>and their fitness scores"]]
-                    KnowledgeBase[["<b>Persistent Knowledge Base</b><br>Long-term memory of distilled rules<br>and heuristics"]]
-                end
+                EvoEngine --> Selection --> Recombination --> Mutation
+            end
 
-                %% Connections
-                Mutation -- "Creates New Generation" --> Population
-                Population -- "Provides Prompt Candidates" --> Coder
-                Executor -- "Provides Performance Data" --> GPO
-                KnowledgeBase -- "Seeds Mutations" --> Mutation
+            subgraph "TASK EXECUTION ENGINE (Inner Loop)"
+                direction LR
+                style CodeAgent fill:#C8E6C9,stroke:#A5D6A7
+                style TestAgent fill:#B2DFDB,stroke:#80CBC4
+                style Executor fill:#DCE775,stroke:#D4E157
 
-                FinalCode[["<b>Verified & Tested Code</b>"]] 
-                style FinalCode fill:#43A047,stroke:#C8E6C9,stroke-width:2px
-                Executor --> FinalCode
+                CodeAgent("<b>Code Generation Agent</b>")
+                TestAgent("<b>Test Generation Agent</b>")
+                Executor("<b>Execution & Verification Module</b>")
+
+                CodeAgent -- "Source Code" --> TestAgent
+                TestAgent -- "Test Suite" --> Executor
+                Executor -- "Execution Result (Pass/Fail)" --> CodeAgent
+            end
+
+            subgraph "DATA & MEMORY"
+                direction TB
+                style GenomeDB fill:#FFCCBC,stroke:#FFAB91
+                style KnowledgeBase fill:#FFCCBC,stroke:#FFAB91
+                GenomeDB[["<b>Prompt Genome Database</b><br>Population of structured prompts<br>with evolvable parameters"]]
+                KnowledgeBase[["<b>Persistent Knowledge Base</b><br>Distilled heuristics to seed mutations"]]
+            end
+
+            %% Connections
+            Mutation -- "Creates Next Generation of Genomes" --> GenomeDB
+            GenomeDB -- "Provides Prompt Genome for Task" --> CodeAgent
+            Executor -- "Provides Performance Data for Fitness Calculation" --> EvoEngine
+            KnowledgeBase -- "Provides Heuristics for Targeted Mutations" --> Mutation
+
+            FinalCode[["<b>Verified & Tested Code Artifact</b>"]] 
+            style FinalCode fill:#A5D6A7,stroke:#66BB6A,stroke-width:2px
+            Executor --> FinalCode
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true, theme: 'dark', themeVariables: { fontSize: '18px' }});</script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
 </body>
 </html>

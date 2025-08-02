@@ -62,18 +62,18 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: View the Definitive V8 Architecture
+## Architecture: View the Definitive V9 Architecture
 
-Previous attempts to represent the system's architecture within this README have been inadequate. To provide the level of detail, clarity, and visual quality required, I have created a standalone, web-based visualization.
+To provide the required level of detail, scientific formalism, and visual clarity, the project's architecture is now maintained in a standalone, web-based format. This visualization details the V9 architecture, which is centered on the principle of **Efficient Evolutionary Prompt Engineering** and is optimized for small models.
 
 This new visualization is:
--   **Detailed:** It shows the complete V8 architecture, including the Genetic Prompt Optimizer and the Autonomous Development Cycle.
--   **Readable:** It uses large, clear fonts and a high-contrast color scheme.
--   **Visually Appealing:** It leverages modern web technologies to present a professional and easy-to-understand diagram.
+-   **Scientifically Grounded:** It uses formal, academic terminology to describe the evolutionary process.
+-   **Detailed:** It clearly illustrates the Parameter-Efficient Prompt Optimization approach, the structure of the Prompt Genome, and the interaction between the Evolutionary Engine and the Task Execution Engine.
+-   **Professionally Styled:** It uses a clean, academic color palette and layout for maximum readability.
 
-**[Click here to view the interactive V8 architecture diagram](./architecture.html)**
+**[Click here to view the interactive V9 architecture diagram](./architecture.html)**
 
-This diagram is the definitive representation of the AICAI project's architecture and its path to achieving true, unbounded improvement.
+This diagram is the definitive representation of the AICAI project's architecture and its scientifically-grounded path to achieving unbounded improvement.
 
 
 ## Installation

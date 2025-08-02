@@ -1,55 +1,69 @@
-# AICAI - Architecture & Functionality Notes (V8 - Definitive)
+# AICAI - Architecture & Functionality Notes (V9 - Definitive)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** To define the final, definitive architecture (V8) that incorporates a genetic algorithm for proactive improvement and to plan a high-quality, web-based visualization that is detailed, readable, and visually appealing.
+**Purpose:** To define the final, definitive architecture (V9) that incorporates a scientifically-grounded, efficient evolutionary algorithm for prompt engineering, optimized specifically for small models. This version replaces informal concepts with formal terminology and focuses on parameter-efficient optimization.
 
 ---
 
-## 1. Core Philosophy: A Synthesis of Evolutionary and Autonomous Design
+## 1. Core Philosophy: Efficient Evolutionary Prompt Engineering
 
-This architecture is the synthesis of all previous iterations. It achieves proactive, "infinite" improvement through a **Genetic Prompt Optimizer** that evolves the system's core intelligence. It grounds this evolution in reality through an **Autonomous Development Cycle** that writes, tests, and executes its own code. This is the most robust and complete vision for the AICAI project.
+Previous architectures were not sufficiently optimized for the constraints of small models. This V9 architecture implements a more sophisticated and efficient approach: **Parameter-Efficient Prompt Optimization**. Instead of evolving large, unstructured blocks of text, the system will evolve specific, high-impact parameters within a structured prompt template. This dramatically reduces the search space, enabling faster convergence and making the process feasible for smaller, less powerful models.
 
----
+### 1.1. The Scientific Justification for Crossover and Mutation
 
-## 2. Architectural Deep Dive - V8
+In the context of genetic algorithms, these operators are not random; they are essential for a robust search of the solution space.
 
-The V8 architecture consists of two primary, interconnected loops:
+-   **Recombination (Crossover):** This process combines elements from two successful parent prompts. Its purpose is to **exploit** existing good solutions by creating new combinations of proven successful traits. It allows the system to test the hypothesis that "mixing the best parts of two good prompts can create an even better one."
+-   **Mutation:** This process introduces small, random changes to a prompt. Its purpose is to **explore** new, undiscovered areas of the solution space. It is the primary mechanism for innovation, preventing the algorithm from getting stuck in a local optimum and allowing for the discovery of novel, counter-intuitive solutions that would not arise from simple recombination.
 
-1.  **The Outer Loop (Evolutionary Engine):** This is the slow, strategic loop responsible for evolving the system's prompts using a genetic algorithm. This is the engine of long-term, proactive improvement.
-2.  **The Inner Loop (Autonomous Development):** This is the fast, tactical loop that uses the current best prompts to execute development tasks (Plan -> Code -> Test -> Execute).
-
-### 2.1. Key Components & Data Flow
-
--   **Genetic Prompt Optimizer:** The master controller for the Outer Loop.
-    -   **Population Manager:** Creates and manages the population of prompt candidates for each persona.
-    -   **Fitness Calculator:** Scores each prompt candidate based on performance data from the Inner Loop.
-    -   **Evolutionary Operator (LLM-driven):** Performs crossover and mutation on the fittest prompts to create the next generation.
-
--   **Autonomous Development Engine:** The master controller for the Inner Loop.
-    -   **Personas (`Architect`, `Coder`, `Test Developer`, `Reviewer`):** Execute their tasks using the current champion prompts.
-    -   **Executor:** Runs tests and linters, providing objective feedback.
-
--   **Memory:**
-    -   **Prompt Population DB:** A structured store (e.g., a JSON file) holding all prompt candidates and their fitness scores.
-    -   **Working Memory:** The short-term memory for the Inner Loop (code, plan, critique).
-    -   **Knowledge Base:** The long-term memory of distilled heuristics, which can be used to seed new prompt mutations.
+Together, they create a balanced search strategy that both refines existing solutions and discovers entirely new ones.
 
 ---
 
-## 3. Visualization V6: High-Fidelity HTML Diagram
+## 2. Architectural Deep Dive - V9
 
-The previous visualization methods were inadequate. I will create a standalone `architecture.html` file to render a superior diagram. This approach provides full control over styling, readability, and visual appeal.
+### 2.1. The Core Component: The Prompt Genome
 
-**Plan for `architecture.html`:**
+The central innovation is the concept of the **Prompt Genome**. Each prompt is no longer a simple string, but a structured object (a "genome") with specific, evolvable parameters ("genes").
 
-1.  **HTML Structure:** A basic HTML5 boilerplate.
-2.  **Mermaid.js Library:** I will include the Mermaid.js library via a CDN to render the diagram from text-based code.
-3.  **Custom CSS:** This is the critical step. I will embed a `<style>` block to:
-    -   Set a dark theme for the background.
-    -   Define a vibrant, high-contrast color palette for different system components (e.g., blue for the inner loop, purple for the outer loop, orange for memory).
-    -   **Significantly increase the font size** for all text within the diagram.
-    -   Use a clean, modern font like 'Fira Code' or 'Inter'.
-    -   Style the nodes with rounded corners, borders, and shadows to give them a professional, card-like appearance.
-4.  **Mermaid Diagram Code:** The diagram itself will be highly detailed, showing the sub-components and the precise data flowing between them. It will clearly delineate the Outer (Evolutionary) and Inner (Development) loops.
+```python
+@dataclass
+class PromptGenome:
+    # A fixed, structural template for the prompt
+    template: str 
+    
+    # Evolvable parameters ("genes")
+    persona_description: str # e.g., "You are a senior test developer."
+    task_framing: str # e.g., "Your task is to..."
+    output_format_instruction: str # e.g., "Provide your output as a JSON array."
+    constraints: List[str] # e.g., ["The code must be written in Python 3.9.", "All functions must have docstrings."]
+    temperature: float # A parameter for the LLM call itself
+```
 
-This approach will finally produce the "real visualization" the user has been asking for: detailed, readable, and aesthetically pleasing. I will now proceed with creating this file.
+The genetic algorithm will now operate on these structured parameters, not on the entire text blob. This is far more efficient.
+
+### 2.2. The Evolutionary Engine
+
+-   **Specialized Agents:** The system employs a set of specialized agents (formerly "personas"), such as the `CodeGenerationAgent` and the `TestGenerationAgent`.
+-   **The Evolutionary Cycle:**
+    1.  **Initialization:** The system creates an initial population of `PromptGenome` objects with diverse parameter values.
+    2.  **Fitness Evaluation:** Each `PromptGenome` is used to configure and run its corresponding agent through a series of benchmark tasks. A **Fitness Score** is calculated based on empirical performance (test pass rate, code quality, efficiency).
+    3.  **Selection:** The genomes with the highest fitness scores are selected for reproduction.
+    4.  **Recombination (Crossover):** A new `PromptGenome` is created by combining parameters from two parent genomes. For example, the child might inherit the `persona_description` from parent A and the `constraints` from parent B.
+    5.  **Mutation:** A parameter within a genome is randomly altered. For example, a constraint might be rephrased, or the `temperature` might be slightly adjusted. This is a targeted, surgical change.
+
+This parameter-efficient approach allows the system to rapidly test hypotheses about what makes a prompt effective, leading to faster and more meaningful improvements.
+
+---
+
+## 3. Visualization V7: Professional Scientific Diagram
+
+This new visualization will be rendered in a new `architecture.html` file. It will use formal terminology and a professional, academic color palette to accurately represent the sophisticated V9 architecture.
+
+**Plan for `architecture.html` (V2):**
+
+-   **Formal Language:** All nodes and labels will use the new, formal terminology.
+-   **Detailed Flow:** The diagram will explicitly show the flow of `PromptGenome` objects and the distinction between the fixed `template` and the evolvable `parameters`.
+-   **Professional Aesthetics:** A clean, academic color scheme (e.g., blues, greys, and greens) will be used. The layout will be structured to clearly separate the Evolutionary Engine from the Task Execution Engine.
+
+This V9 architecture and V7 visualization will finally meet the user's requirements for a scientifically-grounded, efficient, and professionally-presented system.
