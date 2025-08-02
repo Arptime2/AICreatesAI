@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AICAI V11 Architecture: Definitive Model</title>
+    <title>AICAI V12 Architecture: Proactive Opportunity Seeking</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,68 +11,50 @@
         <div id="diagram-container">
             <div class="mermaid">
             graph TD
-                subgraph "META-COGNITIVE ENGINE (The Optimizer)"
+                subgraph "META-COGNITIVE & INNOVATION ENGINE"
                     direction TB
                     style MetaEngine fill:#E8EAF6,stroke:#3F51B5
-                    MetaEngine("<b>Meta-Cognitive Engine</b><br><i>Analyzes & Rewrites System Logic</i>")
-
-                    subgraph "Sub-modules"
-                        direction LR
-                        style Analyzer fill:#C5CAE9,stroke:#7986CB
-                        style Rewriter fill:#C5CAE9,stroke:#7986CB
-                        Analyzer("<b>Performance Analyzer</b><br>Identifies root causes of failure")
-                        Rewriter("<b>Prompt Rewriter</b><br>Generates new, superior operational prompts")
-                    end
-                    MetaEngine --> Analyzer --> Rewriter
+                    style Innovator fill:#E8EAF6,stroke:#3F51B5
+                    MetaEngine("<b>Meta-Cognitive Engine</b><br><i>Fixes failures</i>")
+                    Innovator("<b>Innovator Agent</b><br><i>Proactively seeks better solutions</i>")
                 end
 
-                subgraph "AUTONOMOUS TASK CYCLE (The Worker)"
+                subgraph "COMPETITIVE A/B TESTING FRAMEWORK"
                     direction TB
-                    style TaskCycle fill:#E0F2F1,stroke:#009688
-                    TaskCycle("<b>Autonomous Task Cycle</b><br><i>Executes development tasks</i>")
+                    style ABTest fill:#FCE4EC,stroke:#E91E63
+                    ABTest("<b>A/B Testing & Promotion</b><br><i>Compares Champion vs. Challenger</i>")
+                end
 
-                    subgraph "Agent Workflow"
-                        direction LR
-                        style CodeAgent fill:#B2DFDB,stroke:#4DB6AC
-                        style TestAgent fill:#B2DFDB,stroke:#4DB6AC
-                        style VerifyModule fill:#B2DFDB,stroke:#4DB6AC
-                        CodeAgent("<b>Code Generation Agent</b>")
-                        TestAgent("<b>Test Generation Agent</b>")
-                        VerifyModule("<b>Verification Module</b>")
-                    end
-                    TaskCycle --> CodeAgent -- "Source Code" --> TestAgent -- "Test Suite" --> VerifyModule
+                subgraph "AUTONOMOUS TASK CYCLE"
+                    direction LR
+                    style TaskCycle fill:#E0F2F1,stroke:#009688
+                    TaskCycle("<b>Autonomous Task Cycle</b><br><i>Executes tasks with a given prompt set</i>")
                 end
 
                 subgraph "SYSTEM MEMORY"
                     direction TB
                     style PromptDB fill:#FFF3E0,stroke:#FFB74D
-                    style LogDB fill:#FFF3E0,stroke:#FFB74D
-                    PromptDB[["<b>Operational Prompts DB</b><br>The current 'source code' for the agents"]]
-                    LogDB[["<b>Performance Trace DB</b><br>Structured logs of all actions & results"]]
+                    PromptDB[["<b>Prompt Database</b><br>Stores Champion & Challenger<br>prompt sets"]]
                 end
 
                 %% Data Flow
-                Rewriter -- "Writes New Prompts" --> PromptDB
-                PromptDB -- "Provides Operational Instructions" --> CodeAgent
-                PromptDB -- "Provides Operational Instructions" --> TestAgent
-                VerifyModule -- "Writes Structured Log" --> LogDB
-                LogDB -- "Provides Performance Data" --> Analyzer
+                MetaEngine -- "Writes Corrected Champion" --> PromptDB
+                Innovator -- "Writes New Challenger" --> PromptDB
+                PromptDB -- "Provides Prompt Set" --> TaskCycle
+                TaskCycle -- "Provides Performance Data" --> ABTest
+                ABTest -- "Promotes Winner" --> PromptDB
 
                 %% Final Output
                 VerifiedCode[["<b>Verified Code Artifact</b>"]]
                 style VerifiedCode fill:#DCE775,stroke:#9CCC65,stroke-width:3px
-                VerifyModule --> VerifiedCode
+                TaskCycle --> VerifiedCode
 
                 %% Interactivity Callbacks
                 click MetaEngine callback "MetaEngine"
-                click Analyzer callback "Analyzer"
-                click Rewriter callback "Rewriter"
+                click Innovator callback "Innovator"
+                click ABTest callback "ABTest"
                 click TaskCycle callback "TaskCycle"
-                click CodeAgent callback "CodeAgent"
-                click TestAgent callback "TestAgent"
-                click VerifyModule callback "VerifyModule"
                 click PromptDB callback "PromptDB"
-                click LogDB callback "LogDB"
             </div>
         </div>
         <div id="info-panel">
