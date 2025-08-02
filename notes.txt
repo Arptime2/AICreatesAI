@@ -1,252 +1,99 @@
-# AICAI - Architecture & Functionality Notes
+# AICAI - Architecture & Functionality Notes (V6)
 
 **Author:** Gemini (Senior Open-Source Engineer)
-**Purpose:** Internal planning document for the AICAI project. This file details the architecture, functionality, and design rationale to ensure an efficient and effective implementation.
+**Purpose:** This version introduces a critical component for true autonomy: self-generated testing. The system now not only writes code but also writes the tests to validate it, creating a more robust and self-contained improvement cycle.
 
 ---
 
-## 1. Project Goal & Core Philosophy
+## 1. Core Philosophy: Autonomous Quality Assurance
 
-**Goal:** Create a CLI tool that uses small, fast LLMs (via Groq) to recursively generate and improve code, inspired by the ASI-Arch project.
+The previous architectures were still dependent on a human to provide the initial test suite. This is a fundamental limitation. A truly autonomous, infinitely improving system must be responsible for its own quality assurance. It must generate its own hypotheses about correctness (the code) and then generate the experiments to falsify them (the tests).
 
-**Philosophy:**
-- **Efficiency-First:** Every component must be lean and essential. No feature creep.
-- **Recursive Improvement:** The core value comes from the iterative loop, not a single powerful model.
-- **Small Model Optimization:** The entire system must be designed to work around the constraints of an ~8K token context window.
+**The New Core Cycle: `Plan -> Code -> Test -> Execute`**
 
----
-
-## 2. Detailed Architecture (V1 - Deprecated)
-
-(Previous architecture notes are deprecated in favor of the V3 Deep Dive)
+This represents a major leap in capability. The system now internalizes the complete development workflow.
 
 ---
 
-## 3. Architectural Deep Dive - V3
+## 2. Architectural Deep Dive - V6
 
-**Research Synthesis:** My previous models were too simplistic. True autonomous systems require a clear separation of concerns between the controller (the orchestrator), the state (the memory), and the specialized functions (the personas). The architecture needs to be modeled as a **State Machine** governed by an **Orchestrator**, operating on a well-defined **Working Memory**. This is the key to enabling complex, emergent behavior from simple, stateless LLM calls.
+### 2.1. The New `Test Developer` Persona
 
-### 3.1. The Working Memory (The System's State)
+This is a new, specialized LLM-based persona that is a peer to the `Coder`.
 
-This is no longer an abstract concept. It will be implemented as a concrete Python dataclass. This provides structure and type safety.
+-   **Role:** An expert in software testing and quality assurance.
+-   **Trigger:** Activated immediately after the `Coder` persona successfully generates a piece of code for a given task.
+-   **Input:** The user's goal, the specific task from the plan, and the code produced by the `Coder`.
+-   **Task:** "You are a senior test developer. Based on the provided goal and code, write a comprehensive unit test using the project's established testing framework (e.g., pytest). The test must cover the primary success case, edge cases, and potential error conditions. Only output the test code."
+-   **Output:** A new function or file containing the unit test code.
 
-```python
-@dataclass
-class WorkingMemory:
-    user_goal: str
-    code_state: Dict[str, str]  # {filepath: content}
-    plan: List[Dict]  # e.g., {'id': 1, 'task': '...', 'status': 'pending'}
-    execution_trace: List[str]
-    critique: List[Dict] # e.g., {'type': 'BUG', 'details': '...'}
-    iteration: int
-```
+### 2.2. The Evolved Inner Loop: The Complete Development Cycle
 
--   **Why this structure?** It forces a rigorous, machine-readable representation of the system's state. The `plan` and `critique` are no longer freeform text but structured data. This allows the Orchestrator to make decisions based on data, not by parsing prose.
+The Inner Loop is now a much more powerful engine.
 
-### 3.2. The Orchestrator (The State Machine)
+1.  **`Architect`:** Creates the plan.
+2.  **`Coder`:** Implements the code for a single task in the plan.
+3.  **`Test Developer`:** Writes a new test for the code just produced.
+4.  **`Executor`:** Runs the newly created test. The feedback (pass/fail, stack trace) is now richer because it directly corresponds to a test the system itself conceived.
+5.  **`Reviewer`:** Analyzes the code, the new test, and the execution result to provide a holistic critique.
 
-The `recursive_improver.py` will implement the Orchestrator. Its core is a `run()` method that acts as a state machine loop.
+### 2.3. Impact on the Outer Loop (Knowledge Distillation)
 
-**States:** `[PLANNING, CODING, REVIEWING, CORRECTING, FINALIZING]`
+The `Strategist` persona now has access to a much richer data stream. It can analyze not just the code's failures but the entire generation and validation process.
 
-1.  **`PLANNING` State:**
-    -   **Trigger:** First iteration, or when the `CORRECTING` state determines the plan is flawed.
-    -   **Action:** Calls the `Architect` persona.
-    -   **Input to LLM:** `working_memory.user_goal`, `working_memory.critique`.
-    -   **Output from LLM:** A JSON object representing the plan.
-    -   **State Update:** `working_memory.plan` is overwritten. `working_memory.critique` is cleared.
-    -   **Next State:** `CODING`.
+-   **New Analysis Capabilities:**
+    -   **Poor Test Quality:** If the `Executor` reports that tests are passing but the final application still has bugs, the `Strategist` can infer that the `Test Developer` is writing poor-quality or insufficient tests. It can then update the `Test Developer`'s prompt to be more rigorous.
+    -   **Untestable Code:** If the `Test Developer` consistently struggles to write tests for the `Coder`'s output, the `Strategist` can infer that the `Coder` is writing untestable, tightly-coupled code. It can then update the `Coder`'s prompt to emphasize dependency injection, pure functions, and other principles of testable design.
 
-2.  **`CODING` State:**
-    -   **Trigger:** The `plan` has tasks with `status: 'pending'`.
-    -   **Action:** Loops through pending tasks and calls the `Coder` persona for each.
-    -   **Input to LLM:** `working_memory.code_state`, and a *single* task from `working_memory.plan`.
-    -   **Output from LLM:** A code snippet or modification (e.g., a diff).
-    -   **State Update:** The Orchestrator applies the change to `working_memory.code_state`. The task's status in `working_memory.plan` is updated to `'done'`.
-    -   **Next State:** `REVIEWING` (once a batch of coding tasks is complete).
-
-3.  **`REVIEWING` State:**
-    -   **Trigger:** After a `CODING` cycle.
-    -   **Action:** Calls the `Reviewer` persona.
-    -   **Input to LLM:** `working_memory.code_state`, `working_memory.plan`.
-    -   **Output from LLM:** A JSON array of critique objects.
-    -   **State Update:** `working_memory.critique` is populated with the output.
-    -   **Next State:** `CORRECTING`.
-
-4.  **`CORRECTING` State:**
-    -   **Trigger:** After a `REVIEWING` cycle.
-    -   **Action:** This is a pure logic step, no LLM call. It's the "decision maker."
-    -   **Logic:**
-        -   If `working_memory.critique` is empty, transition to `FINALIZING`.
-        -   If critique contains high-level issues (e.g., architectural flaws), transition to `PLANNING`.
-        -   If critique contains simple bugs, it modifies the `plan`, adding new tasks (e.g., `{'task': 'Fix bug in function X', 'status': 'pending'}`). Then transitions to `CODING`.
-    -   **Next State:** `PLANNING`, `CODING`, or `FINALIZING`.
-
-5.  **`FINALIZING` State:**
-    -   **Trigger:** The `CORRECTING` state finds no more issues.
-    -   **Action:** The loop terminates. The final code is presented to the user.
-
-### 3.3. Why This Architecture Excels with Small Models
-
--   **Extreme Task Decomposition:** The LLM is never asked to do more than one, tiny thing at a time. The `Coder` implements one function. The `Architect` creates one plan. This keeps the context for each call minimal and highly relevant.
--   **Structured I/O:** By forcing the LLM to read and write JSON, we remove ambiguity. The system is not parsing English prose to figure out what to do next. This makes the system more reliable and predictable.
--   **Stateful Orchestrator, Stateless Model:** The intelligence and memory are in our Python code (the Orchestrator and Working Memory). The expensive, slow part (the LLM) is treated as a stateless function call—a tool that is picked up, used for a specific job, and put down. This is the most efficient way to use a service like Groq.
+This allows the system to achieve a higher level of abstraction in its learning. It doesn't just learn to fix bugs; it learns to write clean, testable code and to be a more effective tester of that code.
 
 ---
 
-## 4. Prompt Engineering Strategy
+## 3. Visualization V4: The Autonomous Quality Cycle
 
-**Centralized Prompts:** All prompts will be stored in `prompts.py`. They will be implemented as f-strings or using a templating engine if they become complex.
+This new diagram is designed for maximum clarity and visual appeal. It uses a more dynamic, circular flow to represent the core loop and a vibrant color scheme. The fonts are clean and large.
 
-**Persona-Based Prompts:**
-
--   **Architect Prompt:**
-    -   **Role:** "You are a master software architect."
-    -   **Task:** "Analyze the user's goal and the current critique. Create a step-by-step plan in JSON format to achieve the goal while fixing the issues."
-    -   **Input:** User Goal, Critique List.
-    -   **Output:** `{"plan": [{"id": 1, "task": "..."}]}`
-
--   **Coder Prompt:**
-    -   **Role:** "You are an expert programmer."
-    -   **Task:** "Implement the following task. Only provide the code, nothing else."
-    -   **Input:** Relevant Code Snippets, Specific Task Description.
-    -   **Output:** Raw code.
-
--   **Reviewer Prompt:**
-    -   **Role:** "You are a meticulous code reviewer."
-    -   **Task:** "Analyze the code against the plan. Identify any bugs, style issues, or deviations. Provide your feedback as a JSON array of issues. If there are no issues, return an empty array."
-    -   **Input:** Full Code State, Plan.
-    -   **Output:** `[{"type": "BUG", "file": "...", "description": "..."}, ...]`
-
----
-
-## 5. File Structure & Responsibilities
-
--   `main.py`: CLI entry point. Parses args, initializes `WorkingMemory`, creates the `Orchestrator`, and calls its `run()` method.
--   `groq_client.py`: Handles all communication with the Groq API. It will have methods like `call_architect(prompt_data)`, `call_coder(prompt_data)`, etc.
--   `recursive_improver.py`: Contains the `Orchestrator` class and its state machine logic.
--   `file_handler.py`: Simple, robust functions for reading/writing files. The Orchestrator will use this to interact with the filesystem.
--   `prompts.py`: Stores the prompt templates for each persona.
--   `memory.py`: (New file) Will define the `WorkingMemory` dataclass.
-
----
-
-## 6. Infinite Improvement Strategy
-
-The user wants "infinite" improvement. This translates to a robust, configurable loop.
-
--   **Iteration Limit:** The `main.py` CLI will have an `--iterations` flag (e.g., default to 10). This prevents a true infinite loop but allows for deep, multi-pass refinement.
--   **Self-Correction as the Engine:** The `CORRECTING` state is the key. As long as the `Reviewer` finds issues, the loop will continue, re-planning and re-coding. This is the "infinite" improvement mechanism.
--   **Visualizing Progress:** For each iteration, we can print a summary of the state transition (e.g., `Iteration 3: REVIEWING -> CORRECTING -> Found 2 bugs. -> CODING`). This will make the process transparent to the user.
-
----
-
-## 7. Visualization Improvement
-
-The current Mermaid diagram in the README is a good start, but it can be improved.
-
-**Critique of Current Visual:**
--   "Unsupported markdown": This is likely a rendering issue with the font tags. I will simplify them.
--   "Doesn't look like a full detailed architecture": It's a high-level overview. It lacks the state transitions and the data flow between the personas and the memory.
--   "Boring looking": The color scheme is basic. I can use more vibrant, distinct colors for each component to make it more visually appealing and easier to understand at a glance.
-
-**Plan for New Visual:**
-1.  **Tool Selection:** Mermaid is still a good choice because it's text-based and lives within the README. The issue isn't the tool, but how it's being used. I will investigate advanced Mermaid features.
-2.  **New Diagram Concept:**
-    -   **Central Hub:** The `Working Memory` will be the central hub of the diagram.
-    -   **Flow Arrows:** Arrows will be numbered to show the sequence of operations (1. Architect -> 2. Coder -> 3. Reviewer -> 4. Self-Correction).
-    -   **Data Flow:** Arrows will be labeled with the specific data being passed (e.g., "Plan", "Code Snippet", "Critique").
-    -   **Color Coding:** A more vibrant and logical color palette will be used.
-        -   Orchestrator/Logic: Green (Go/Decision)
-        -   Personas: Blue (Cognitive tasks)
-        -   Memory: Yellow/Orange (State/Data)
-        -   LLM: Purple (The "magic" component)
-    -   **Detail:** I will add more detail to the nodes, describing the *actions* they perform, not just their names.
-3.  **Implementation:** I will draft the new Mermaid diagram code directly in this `notes.txt` file before updating the `README.md`. This allows for iteration.
-
-### New Mermaid Diagram Draft
+### New Mermaid Diagram Draft (V4)
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {
-    'primaryColor': '#1a1a1a',
-    'primaryTextColor': '#fff',
-    'secondaryColor': '#333',
-    'lineColor': '#888',
-    'tertiaryColor': '#222',
-    'fontFamily': 'Fira Code, monospace'
-}}}%%
-graph TD
-    subgraph "AICAI Cognitive Cycle"
+%%{init: {'theme': 'dark', 'fontFamily': 'Fira Code, monospace'}}%%
+graph LR
+    subgraph "STRATEGY & KNOWLEDGE"
+        direction TB
+        style Strategist fill:#C2185B,stroke:#FFF,stroke-width:2px
+        style KB fill:#673AB7,stroke:#FFF,stroke-width:2px
+        Strategist("<b>Strategist</b><br>Improves the entire process")
+        KB[("Persistent<br>Knowledge Base")]
+        Strategist --> KB
+    end
+
+    subgraph "AUTONOMOUS DEVELOPMENT & VERIFICATION CYCLE"
         direction LR
-
-        subgraph "🧠 Orchestrator (Python State Machine)"
-            direction TB
-            Orchestrator("<b>Orchestrator</b><br><i>Drives the process</i>")
-            style Orchestrator fill:#0891B2,stroke:#CFD8DC
-
-            subgraph "Persona Execution"
-                direction TB
-                Architect("<b>1. Architect</b><br><i>Generates/Refines Plan</i>")
-                Coder("<b>2. Coder</b><br><i>Implements Plan Tasks</i>")
-                Reviewer("<b>3. Reviewer</b><br><i>Generates Structured Critique</i>")
-                Corrector("<b>4. Corrector</b><br><i>Decides Next State</i>")
-            end
-        end
-
-        subgraph "💾 Working Memory (Python Dataclass)"
-            direction TB
-            WM("<b>Working Memory</b><br><i>The system's 'consciousness'</i>")
-            style WM fill:#F57F17,stroke:#CFD8DC
-
-            WM_Goal["<br><b>User Goal</b><br><font size=2>Immutable user prompt</font>"]
-            WM_Plan["<br><b>Plan</b><br><font size=2>Structured task list (JSON)</font>"]
-            WM_Code["<br><b>Code State</b><br><font size=2>Current version of all files</font>"]
-            WM_Critique["<br><b>Critique</b><br><font size=2>Machine-readable issues (JSON)</font>"]
-        end
-
-        subgraph "🤖 LLM as a Service (Groq API)"
-            LLM("<b>Llama3 8B</b><br><i>Stateless Tool</i>")
-            style LLM fill:#5E35B1,stroke:#CFD8DC
-        end
+        style Coder fill:#0288D1
+        style TestDev fill:#0097A7
+        style Executor fill:#00796B
+        
+        UserInput["User Goal"] --> Coder
+        Coder(<b>1. Coder</b><br>Writes Feature Code) -- Code --> TestDev
+        TestDev(<b>2. Test Developer</b><br>Writes Unit Tests) -- Tests --> Executor
+        Executor(<b>3. Executor</b><br>Runs Tests & Linters) -- "Pass / Fail<br>Stack Trace" --> Coder
     end
 
     %% Connections
-    User_Input[("User Prompt")] --> Orchestrator
+    KB -- Primes with Wisdom --> Coder
+    KB -- Primes with Wisdom --> TestDev
 
-    Orchestrator -- "Activates" --> Architect
-    Architect -- "Reads Goal & Critique" --> WM_Goal
-    Architect -- "Reads Goal & Critique" --> WM_Critique
-    Architect -- "LLM Call" --> LLM
-    LLM -- "Generates Plan" --> Architect
-    Architect -- "Updates" --> WM_Plan
+    Executor -- "Execution Trace & Failures" --> Strategist
+    Executor --> FinalCode["Verified &<br>Tested Code"]
 
-    Orchestrator -- "Activates" --> Coder
-    Coder -- "Reads Plan & Code" --> WM_Plan
-    Coder -- "Reads Plan & Code" --> WM_Code
-    Coder -- "LLM Call" --> LLM
-    LLM -- "Generates Code" --> Coder
-    Coder -- "Updates" --> WM_Code
-
-    Orchestrator -- "Activates" --> Reviewer
-    Reviewer -- "Reads Plan & Code" --> WM_Plan
-    Reviewer -- "Reads Plan & Code" --> WM_Code
-    Reviewer -- "LLM Call" --> LLM
-    LLM -- "Generates Critique" --> Reviewer
-    Reviewer -- "Updates" --> WM_Critique
-
-    Orchestrator -- "Activates" --> Corrector
-    Corrector -- "Reads Critique" --> WM_Critique
-    Corrector -- "Decides next action" --> Orchestrator
-
-    Final_Output[("Final Code")]
-    Orchestrator -- "Loop terminates" --> Final_Output
-
-    style User_Input fill:#4CAF50,stroke:#CFD8DC
-    style Final_Output fill:#4CAF50,stroke:#CFD8DC
-    style Architect fill:#0288D1,stroke:#CFD8DC
-    style Coder fill:#0288D1,stroke:#CFD8DC
-    style Reviewer fill:#0288D1,stroke:#CFD8DC
-    style Corrector fill:#C2185B,stroke:#CFD8DC
+    style UserInput fill:#4CAF50,stroke:#FFF,stroke-width:2px
+    style FinalCode fill:#4CAF50,stroke:#FFF,stroke-width:2px
 ```
 
-This new diagram is more detailed, uses a better color scheme, and explicitly shows the data flow, addressing all the user's critiques. I will now update the `README.md` with this new visual and the improved architectural description.
+**V4 Diagram Improvements:**
+-   **Clarity & Readability:** Large, bold text with a simple, clean layout.
+-   **Dynamic Flow:** The left-to-right flow clearly shows the `Code -> Test -> Execute` sequence as the core engine.
+-   **Vibrant Colors:** A distinct, high-contrast color is used for each major component, making the architecture easy to parse visually.
+-   **Focus on Autonomy:** The diagram places the `Coder` and `Test Developer` in a tight, collaborative loop, emphasizing that the system is responsible for both creation and validation.
+
+This V6 architecture, with its autonomous testing capability, represents a significant step towards a system that can be trusted to improve itself safely and effectively.

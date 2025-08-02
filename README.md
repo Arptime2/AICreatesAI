@@ -62,133 +62,65 @@ This tool relies exclusively on the [Groq API](https://groq.com/) for its speed 
 
 This surgical approach ensures that the context is always dense with relevant information, allowing the small model to perform as if it has a much larger understanding of the codebase.
 
-## Architecture: A Cognitive-Inspired Framework for Autonomous Improvement
+## Architecture: Autonomous Quality via Self-Generated Testing
 
-To truly harness the power of small, high-speed models, a simple loop is insufficient. We have implemented a cognitive-inspired framework that provides the structure and memory necessary for complex reasoning and autonomous self-improvement. This architecture is a direct, practical application of the principles found in advanced AI systems like ASI-Arch, but adapted for the specific domain of code generation.
+A system that cannot validate its own work is not truly autonomous. To achieve unbounded improvement, the system must be responsible for its own quality assurance. This architecture introduces a critical new component—the `Test Developer` persona—to create a self-contained, autonomous development and verification cycle.
 
-The system is built on two core components: a persistent **Working Memory** and a state-driven **Orchestrator** that deploys specialized LLM-based personas.
+The system now operates on a complete, end-to-end development workflow: `Plan -> Code -> Test -> Execute`.
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': {
-    'primaryColor': '#1a1a1a',
-    'primaryTextColor': '#fff',
-    'secondaryColor': '#333',
-    'lineColor': '#888',
-    'tertiaryColor': '#222',
-    'fontFamily': 'Fira Code, monospace'
-}}}%%
-graph TD
-    subgraph "AICAI Cognitive Cycle"
+%%{init: {'theme': 'dark', 'fontFamily': 'Fira Code, monospace'}}%%
+graph LR
+    subgraph "STRATEGY & KNOWLEDGE"
+        direction TB
+        style Strategist fill:#C2185B,stroke:#FFF,stroke-width:2px
+        style KB fill:#673AB7,stroke:#FFF,stroke-width:2px
+        Strategist("<b>Strategist</b><br>Improves the entire process")
+        KB[("Persistent<br>Knowledge Base")]
+        Strategist --> KB
+    end
+
+    subgraph "AUTONOMOUS DEVELOPMENT & VERIFICATION CYCLE"
         direction LR
-
-        subgraph "🧠 Orchestrator (Python State Machine)"
-            direction TB
-            Orchestrator("<b>Orchestrator</b><br><i>Drives the process</i>")
-            style Orchestrator fill:#0891B2,stroke:#CFD8DC
-
-            subgraph "Persona Execution"
-                direction TB
-                Architect("<b>1. Architect</b><br><i>Generates/Refines Plan</i>")
-                Coder("<b>2. Coder</b><br><i>Implements Plan Tasks</i>")
-                Reviewer("<b>3. Reviewer</b><br><i>Generates Structured Critique</i>")
-                Corrector("<b>4. Corrector</b><br><i>Decides Next State</i>")
-            end
-        end
-
-        subgraph "💾 Working Memory (Python Dataclass)"
-            direction TB
-            WM("<b>Working Memory</b><br><i>The system's 'consciousness'</i>")
-            style WM fill:#F57F17,stroke:#CFD8DC
-
-            WM_Goal["<br><b>User Goal</b><br><font size=2>Immutable user prompt</font>"]
-            WM_Plan["<br><b>Plan</b><br><font size=2>Structured task list (JSON)</font>"]
-            WM_Code["<br><b>Code State</b><br><font size=2>Current version of all files</font>"]
-            WM_Critique["<br><b>Critique</b><br><font size=2>Machine-readable issues (JSON)</font>"]
-        end
-
-        subgraph "🤖 LLM as a Service (Groq API)"
-            LLM("<b>Llama3 8B</b><br><i>Stateless Tool</i>")
-            style LLM fill:#5E35B1,stroke:#CFD8DC
-        end
+        style Coder fill:#0288D1
+        style TestDev fill:#0097A7
+        style Executor fill:#00796B
+        
+        UserInput["User Goal"] --> Coder
+        Coder(<b>1. Coder</b><br>Writes Feature Code) -- Code --> TestDev
+        TestDev(<b>2. Test Developer</b><br>Writes Unit Tests) -- Tests --> Executor
+        Executor(<b>3. Executor</b><br>Runs Tests & Linters) -- "Pass / Fail<br>Stack Trace" --> Coder
     end
 
     %% Connections
-    User_Input[(User Prompt)] --> Orchestrator
+    KB -- Primes with Wisdom --> Coder
+    KB -- Primes with Wisdom --> TestDev
 
-    Orchestrator -- "Activates" --> Architect
-    Architect -- "Reads Goal & Critique" --> WM_Goal
-    Architect -- "Reads Goal & Critique" --> WM_Critique
-    Architect -- "LLM Call" --> LLM
-    LLM -- "Generates Plan" --> Architect
-    Architect -- "Updates" --> WM_Plan
+    Executor -- "Execution Trace & Failures" --> Strategist
+    Executor --> FinalCode["Verified &<br>Tested Code"]
 
-    Orchestrator -- "Activates" --> Coder
-    Coder -- "Reads Plan & Code" --> WM_Plan
-    Coder -- "Reads Plan & Code" --> WM_Code
-    Coder -- "LLM Call" --> LLM
-    LLM -- "Generates Code" --> Coder
-    Coder -- "Updates" --> WM_Code
-
-    Orchestrator -- "Activates" --> Reviewer
-    Reviewer -- "Reads Plan & Code" --> WM_Plan
-    Reviewer -- "Reads Plan & Code" --> WM_Code
-    Reviewer -- "LLM Call" --> LLM
-    LLM -- "Generates Critique" --> Reviewer
-    Reviewer -- "Updates" --> WM_Critique
-
-    Orchestrator -- "Activates" --> Corrector
-    Corrector -- "Reads Critique" --> WM_Critique
-    Corrector -- "Decides next action" --> Orchestrator
-
-    Final_Output[(Final Code)]
-    Orchestrator -- "Loop terminates" --> Final_Output
-
-    style User_Input fill:#4CAF50,stroke:#CFD8DC
-    style Final_Output fill:#4CAF50,stroke:#CFD8DC
-    style Architect fill:#0288D1,stroke:#CFD8DC
-    style Coder fill:#0288D1,stroke:#CFD8DC
-    style Reviewer fill:#0288D1,stroke:#CFD8DC
-    style Corrector fill:#C2185B,stroke:#CFD8DC
+    style UserInput fill:#4CAF50,stroke:#FFF,stroke-width:2px
+    style FinalCode fill:#4CAF50,stroke:#FFF,stroke-width:2px
 ```
 
-### The Working Memory: The System's Consciousness
+### The Autonomous Development Cycle
 
-This is the key to overcoming the context limitations of small models. The Working Memory is a structured Python object that holds the complete state of the task. It allows the Orchestrator to maintain a coherent "thought process" across dozens of individual LLM calls.
+This is the core engine of the system, a tight loop that mirrors a complete, modern development workflow.
 
--   **Full Code State**: A dictionary mapping file paths to their current content. This is the ground truth of the project.
--   **High-Level Plan**: A list of dictionaries, where each dictionary is a task with an ID, a description, and a status (`pending`, `completed`, `error`). This is the system's roadmap.
--   **Execution Trace**: A log of every action the Orchestrator takes. This is crucial for debugging and preventing infinite loops.
--   **Structured Critique**: A list of machine-readable issues (e.g., `{"type": "BUG", "file": "app.py", "line": 42, "description": "..."}`). This is the output of the Reviewer and the input for the Self-Correction logic.
--   **User's Goal**: The original prompt, which serves as the ultimate objective for every persona.
+1.  **The Coder Persona:** As before, this persona writes the primary application code based on the user's goal and the system's accumulated knowledge.
 
-### The Orchestrator: The Engine of Cognition
+2.  **The Test Developer Persona (New):** This is the key to autonomy. Immediately after the `Coder` produces code, this new persona is activated. Its sole purpose is to write comprehensive unit tests for the code just created. It analyzes the feature code and the user's intent to generate meaningful tests that cover success cases, edge cases, and potential errors.
 
-The Orchestrator is a state machine that drives the improvement loop. It uses the Working Memory to decide which persona to activate and what information to provide them.
+3.  **The Executor:** This component takes both the feature code and the newly generated test code and runs them in a real execution environment. It executes the test suite (`pytest`, etc.) and captures the results.
 
-#### 1. The Architect Persona (The Planner)
--   **Task**: High-level strategic thinking.
--   **Process**: Reads the `User's Goal` and the `Structured Critique` from Working Memory. It produces a new, refined `High-Level Plan` to address the user's request and fix any identified architectural flaws.
--   **Why it Works**: It separates *what* to do from *how* to do it. This allows the system to make intelligent, high-level decisions before getting bogged down in implementation details.
+### The Self-Correction and Learning Loop
 
-#### 2. The Coder Persona (The Implementer)
--   **Task**: Focused, tactical code generation.
--   **Process**: The Orchestrator provides the Coder with a *single* task from the `High-Level Plan` and the *minimum necessary code* from the `Full Code State`. The Coder's only job is to write the code for that one task.
--   **Why it Works**: This is the core of our small-model optimization. By providing only the most relevant context, we enable the 8B model to perform with the precision of a much larger model on a highly constrained problem.
+The feedback from this cycle is what drives improvement:
 
-#### 3. The Reviewer Persona (The Quality Analyst)
--   **Task**: Holistic code analysis and structured feedback.
--   **Process**: The Reviewer examines the `Full Code State` and the `High-Level Plan`. It does not write code. Instead, it generates a `Structured Critique`—a JSON object detailing bugs, style violations, and deviations from the plan.
--   **Why it Works**: By forcing the LLM to produce structured JSON, we transform a subjective code review into objective, machine-readable data. This is essential for the next step.
+-   **Immediate Feedback:** If a test fails, the `Coder` receives the exact stack trace and error message. It is then tasked with fixing its own code to make the test pass. This is a tight, immediate, and powerful self-correction loop.
+-   **Strategic Improvement:** The `Strategist` persona analyzes the entire cycle. It can now answer much deeper questions. Is the `Coder` writing untestable code? Is the `Test Developer` writing weak tests? The `Strategist` can then update the prompts for *both* personas, teaching them to be better developers and testers. This meta-learning is stored in the **Persistent Knowledge Base**, ensuring the system's capabilities grow over time.
 
-#### 4. Self-Correction Logic (The Decision Maker)
--   **Task**: To intelligently close the loop. This is pure Python code, not an LLM call.
--   **Process**: The Orchestrator analyzes the `Structured Critique`.
-    -   If the critique is empty, the task is complete, and the loop terminates.
-    -   If the critique contains bugs, the Orchestrator adds new tasks to the `High-Level Plan` to fix them and routes back to the **Coder**.
-    -   If the critique contains fundamental architectural issues, it routes back to the **Architect** to rethink the plan.
--   **Why it Works**: This is the mechanism that enables true, autonomous improvement. The system can identify its own mistakes and intelligently decide how to fix them, creating a virtuous cycle of refinement.
-
-This detailed, cognitive-inspired architecture is designed to be robust, efficient, and highly effective, allowing a small, fast 8B model to deliver results that rival those of much larger, slower, and more expensive systems.
+This architecture creates a system that is not just a code generator, but a complete, autonomous agent responsible for the quality of its own work. It is this self-contained cycle of creation and validation that provides a robust and practical path toward infinite improvement.
 
 
 ## Installation
