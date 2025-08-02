@@ -1,0 +1,96 @@
+# AICAI - Architecture & Functionality Notes
+
+**Author:** Gemini (Senior Open-Source Engineer)
+**Purpose:** Internal planning document for the AICAI project. This file details the architecture, functionality, and design rationale to ensure an efficient and effective implementation.
+
+---
+
+## 1. Project Goal & Core Philosophy
+
+**Goal:** Create a CLI tool that uses small, fast LLMs (via Groq) to recursively generate and improve code, inspired by the ASI-Arch project.
+
+**Philosophy:**
+- **Efficiency-First:** Every component must be lean and essential. No feature creep.
+- **Recursive Improvement:** The core value comes from the iterative loop, not a single powerful model.
+- **Small Model Optimization:** The entire system must be designed to work around the constraints of an ~8K token context window.
+
+---
+
+## 2. Detailed Architecture
+
+The architecture is designed as a pipeline orchestrated by a central "improver" module. Each component has a single, clear responsibility.
+
+### 2.1. Component Breakdown
+
+**a) `main.py` - The CLI Interface & Orchestrator**
+- **Responsibility:** Parse user arguments, read initial files, invoke the core improvement loop, and handle the final output.
+- **Technology:** Python's `argparse` library.
+- **CLI Interface Definition:**
+  ```bash
+  python -m src.main --prompt "<user_request>" [--file <path_to_code>] [--output-file <path_to_save>] [--model <model_name>] [--verbose]
+  ```
+  - `--prompt` (required): The high-level user request (e.g., "create a fastapi endpoint").
+  - `--file` (optional): Path to an existing file. If provided, its content is used as the initial `current_code`.
+  - `--output-file` (optional): File to save the final, refined code. If omitted, print to `stdout`.
+  - `--model` (optional, default: `llama3-8b-8192`): Allows selecting a different Groq model.
+  - `--verbose` (optional, flag): If set, prints intermediate steps, plans, and LLM calls for debugging.
+
+**b) `recursive_improver.py` - The Core Logic**
+- **Responsibility:** Execute the Plan -> Decompose -> Execute -> Refine loop. This is the brain of the operation.
+- **Class: `RecursiveImprover`**
+  - `__init__(self, groq_client)`: Initializes with a `GroqClient` instance.
+  - `run(self, user_prompt, initial_code)`: The main entry point for the loop.
+- **Internal Flow:**
+  1.  **Phase 1: Planning.**
+      - Takes the `user_prompt`.
+      - Formats it using `prompts.PLANNING_PROMPT`.
+      - Sends it to the `GroqClient`.
+      - **Why it works:** This first call establishes a high-level strategy. The LLM is good at breaking down problems. The output is a structured list of steps (e.g., a newline-separated list).
+
+  2.  **Phase 2: Decomposition & Execution Loop.**
+      - Parses the plan from Phase 1 into a list of individual steps.
+      - Initializes a `current_code` variable with the `initial_code` from the input file.
+      - Iterates through each `step` in the plan:
+        - **Crucial Step:** It constructs a *highly specific* prompt for the LLM using `prompts.EXECUTION_PROMPT`.
+        - This prompt contains: `user_prompt`, the full `plan`, the *current* `step`, and the `current_code`.
+        - **Why it works (Context Window Efficiency):** This is the key to small model success. We are not asking the model to write the whole app. We are asking it to perform *one small task* (e.g., "add an import statement," "define the `__init__` method"). The context is small but dense with exactly what the model needs for that single task.
+        - The LLM's response (the generated code for that step) is appended to `current_code`.
+        - This updated `current_code` is then used in the prompt for the *next* step, creating a chain of context.
+
+  3.  **Phase 3: Refinement.**
+      - After the loop finishes, the complete `current_code` (the first draft) is passed to a final review step.
+      - It uses `prompts.REFINEMENT_PROMPT`.
+      - This prompt asks the LLM to act as a code reviewer: check for bugs, improve clarity, add comments, etc.
+      - **Why it works:** This leverages the LLM's pattern-recognition ability for a different purpose. It's no longer generating, but critiquing and improving. This final pass smooths out inconsistencies that might arise from the step-by-step generation process.
+
+**c) `groq_client.py` - The API Abstraction**
+- **Responsibility:** Handle all communication with the Groq API.
+- **Class: `GroqClient`**
+  - `__init__(self)`: Reads the `GROQ_API_KEY` from environment variables.
+  - `generate(self, prompt, model)`: Sends the prompt to the specified model and returns the text content of the response.
+- **Why it works:** This isolates the external dependency. If we ever wanted to switch to a different API, we would only need to change this file.
+
+**d) `file_handler.py` - Filesystem Interaction**
+- **Responsibility:** Safe reading and writing of files.
+- **Functions:** `read_file(path)`, `write_to_file(path, content)`.
+- **Why it works:** Prevents file I/O logic from cluttering the main application logic. Simple, testable, and reliable.
+
+**e) `prompts.py` - The Prompt Store**
+- **Responsibility:** Store all prompt templates in a single, easily editable location.
+- **Why it works:** This is a critical design choice for an LLM-based application. Prompt engineering is an iterative process. Separating prompts from Python code allows us to tweak the AI's behavior, instructions, and personality without touching the application's core logic.
+
+---
+
+## 3. Research & Justification for Efficiency
+
+**The Core Problem with LLMs:** Large context windows are expensive and slow. Small models are fast but can't see the "big picture."
+
+**Our Solution (The ASI-Arch Principle):** We give the small model a "scaffolding" for reasoning. The `RecursiveImprover` acts as the executive function, while the LLM acts as a specialized, stateless cognitive resource.
+
+- **How We Beat the Context Limit:** The decomposition loop is the answer. A 500-line application is too big for an 8K context. But a single function and a request to "add error handling to this function" is not. By breaking the problem down *before* calling the LLM, we ensure each call is small, targeted, and efficient.
+
+- **Why Groq is Essential:** The iterative nature of this tool (potentially dozens of LLM calls for a single user prompt) would be painfully slow on a traditional GPU-based inference service. Groq's LPU architecture provides near-instantaneous responses, making the recursive loop feel responsive and interactive rather than a slow, batch process.
+
+- **Statelessness by Design:** The tool itself is stateless. It doesn't remember past runs. All necessary context is either in the source files or provided in the prompt. This dramatically simplifies the architecture and prevents complex state management issues.
+
+This combination of architectural decomposition and high-speed inference allows a small, "dumber" model to collectively achieve a result that is competitive with a much larger, slower, and more expensive model.
